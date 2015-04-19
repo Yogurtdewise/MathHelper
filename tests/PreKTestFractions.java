@@ -30,7 +30,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import project.buttons.PreKModuleSelectTestButtons;
-import project.constants.AppleBoard;
 import project.constants.DifficultyLevel;
 import project.interfaces.ModuleSelectButtonInterface;
 import project.interfaces.TestableObserver;
@@ -41,25 +40,25 @@ import project.tools.QuestionPanelSelect;
 import project.tools.TextFileMaker;
 
 /**
- * This class is used to test PreK-K students on number Matching skills. It displays two selectable
- *  panels, each with a quantity of some object. A student is asked to select the panel that has the
- *  same number of objects as specified in a question, then click the "Submit" button. While a student
- *  may be asked to match the same number multiple times, the combination of panel quantities will
- *  never be used twice.
+ * This class is used to test PreK-K students on number Fractions skills (whole vs half). It displays
+ *  two selectable panels, each with a half or a whole of some object. A student is asked to select the
+ *  panel that displays the question's specified attributes, then click the "Submit" button. While a student
+ *  may be the same image set multiple times, the combination of panels and question types will never be
+ *  used twice.
  * @author Kenneth Chin
  */
-public class PreKTestMatching implements TestableObserver{
+public class PreKTestFractions implements TestableObserver{
 	
 	//The ModuleSelectButtonInterface that describes this test.
-	private static final ModuleSelectButtonInterface TEST_BUTTON = PreKModuleSelectTestButtons.Button.MATCHING;
-
-	private static final int LOWEST_INT    = 0;         //MUST be zero.
-	private static final int HIGHEST_INT   = 10;        //The highest value that may be asked in a question.
+	private static final ModuleSelectButtonInterface TEST_BUTTON = PreKModuleSelectTestButtons.Button.FRACTIONS;
+	
+	private static String wholePath = "\\images\\test\\fractions\\whole\\";
+	private static String halfPath  = "\\images\\test\\fractions\\half\\";
 	
 	//Difficulty settings. Note: MUST be less than the maximum number of question permutations.
-	private static final int EASY_MAX_QUESTIONS = 10;   //The maximum number of questions for the "Easy" difficulty.
-	private static final int NORM_MAX_QUESTIONS = 15;   //The maximum number of questions for the "Normal" difficulty.
-	private static final int HARD_MAX_QUESTIONS = 20;   //The maximum number of questions for the "Hard" difficulty.
+	private static final int EASY_MAX_QUESTIONS = 8;    //The maximum number of questions for the "Easy" difficulty.
+	private static final int NORM_MAX_QUESTIONS = 10;   //The maximum number of questions for the "Normal" difficulty.
+	private static final int HARD_MAX_QUESTIONS = 12;   //The maximum number of questions for the "Hard" difficulty.
 	private int maxNumberOfQuestions = EASY_MAX_QUESTIONS; //The actual maximum number of questions for this test.
 	
 	private Random rng = new Random(System.currentTimeMillis()); //A random number generator.
@@ -67,14 +66,19 @@ public class PreKTestMatching implements TestableObserver{
 	private boolean isPractice = false;   //Used to indicate that this test is a practice test.
 	private DifficultyLevel difficulty;   //The current DifficultyLevel of this test.
 	
-	private int currentQuestionNum = 1;   //The current question number.
-	private ArrayList<String> imagePaths; //The file paths of all AppleBoard images, in the order of the enum.
-	//The set (correctAnswer, wrongAnswer). Used to determine if a correct answer's panel was used
-	//  with a wrongAnswer's panel.
-	private boolean[][] isNumberSetUsed = new boolean[(HIGHEST_INT + 2)][(HIGHEST_INT + 2)];
-	private int correctAnswer;   //The value and index of the panel that is correct.
-	private int wrongAnswer;     //The value and index of the panel that is incorrect.
-	private String answerString; //The correct answer's panel String ("left" or "right").
+	private int currentQuestionNum = 1;    //The current question number.
+	private ArrayList<String> halfPaths;   //Used to store image file names & track unused "half" questions.
+	private ArrayList<String> wholePaths;  //Used to store image file names & track unused "whole" questions.
+	private String leftImagePath;          //Used to store the left panel's image path.
+	private String rightImagePath;         //Used to store the right panel's image path.
+	private String answerString;           //The correct answer's panel String ("left" or "right").
+
+	private static final int HALF  = 0;    //Representation of the "Half" answer.
+	private static final int WHOLE = 1;    //Representation of the "Whole" answer.
+	
+	private String imageName;    //Used to store this question's image name.
+	private int questionType;    //Used to indicate this question's type; WHOLE or HALF.
+
 	private int numCorrect = 0;  //The number of correct answers obtained from the user.
 	private ArrayList<String> wrongAnswers = new ArrayList<String>(); //Used to track incorrect answers.
 	
@@ -85,13 +89,13 @@ public class PreKTestMatching implements TestableObserver{
 	private MainWindow mainWindow; //The MainWindow that will have questions displayed on.
 	
 	/**
-	 * The PreKTestMatching constructor. Creates and displays a Matching test for PreK-K students.
+	 * The PreKTestFractions constructor. Creates and displays a Fractions test for PreK-K students.
 	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 * @throws IOException Thrown if any image file is missing.
 	 */
-	public PreKTestMatching(GUIManager manager, boolean isPractice, DifficultyLevel difficulty) throws IOException{
+	public PreKTestFractions(GUIManager manager, boolean isPractice, DifficultyLevel difficulty) throws IOException{
 		this.manager    = manager;
 		this.mainWindow = manager.getMainWindow();
 		this.isPractice = isPractice;
@@ -111,7 +115,7 @@ public class PreKTestMatching implements TestableObserver{
 	 */
 	public void playTutorial(){
 	    try{
-	    	String filePath = "audio\\Test Tutorials\\Matching.wav";
+	    	String filePath = "audio\\Test Tutorials\\Fractions.wav";
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
 	        clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
@@ -131,14 +135,80 @@ public class PreKTestMatching implements TestableObserver{
 	}
 	
 	/**
-	 * Used to obtain an unused combination of panel quantities.
+	 * Used to obtain and set an unused combination of panel quantities.
+	 * @return A boolean indicating if the values for questionType, imageName, answerString,
+	 *  leftImagePath, and rightImagePath have been set; false otherwise.
 	 */
-	private void getValues(){
-		do{
-			correctAnswer = getRandomInt(LOWEST_INT, HIGHEST_INT);
-			wrongAnswer   = getRandomInt(LOWEST_INT, HIGHEST_INT);
-		}while(correctAnswer == wrongAnswer || isUsedQuestion(correctAnswer, wrongAnswer));
-		isNumberSetUsed[correctAnswer][wrongAnswer] = true;
+	private boolean getValues(){
+		boolean isSet = false;
+		int begin = (halfPaths.size()  > 0) ? 0 : 1;
+		int end   = (wholePaths.size() > 0) ? 1 : 0;
+		questionType  = getRandomInt(begin, end);
+		int answerLoc = getRandomInt(0, 1);
+		
+		if(questionType == HALF && halfPaths.size() > 0){
+			int index = getRandomInt(0, halfPaths.size() - 1);
+			String fileName = halfPaths.get(index);
+			imageName = getImageNameFromFileName(fileName);
+			if(answerLoc == 0){
+				answerString   = QuestionPanelSelect.Answer.LEFT.getStringValue();
+				leftImagePath  = halfPath  + fileName;
+				rightImagePath = wholePath + fileName;
+			}else{
+				answerString   = QuestionPanelSelect.Answer.RIGHT.getStringValue();
+				leftImagePath  = wholePath + fileName;
+				rightImagePath = halfPath  + fileName;
+			}
+			halfPaths.remove(index);
+			isSet = true;
+		}else if(questionType == WHOLE && wholePaths.size() > 0){
+			int index = getRandomInt(0, wholePaths.size() - 1);
+			String fileName = wholePaths.get(index);
+			imageName = getImageNameFromFileName(fileName);
+			if(answerLoc == 0){
+				answerString   = QuestionPanelSelect.Answer.LEFT.getStringValue();
+				leftImagePath  = wholePath + fileName;
+				rightImagePath = halfPath  + fileName;
+			}else{
+				answerString   = QuestionPanelSelect.Answer.RIGHT.getStringValue();
+				leftImagePath  = halfPath + fileName;
+				rightImagePath = wholePath  + fileName;
+			}
+			wholePaths.remove(index);
+			isSet = true;
+		}
+		return isSet;
+	}
+	
+	/**
+	 * A helper method that obtains the image name associated with the specified fileName, according to Images.
+	 * NOTE: Used because I didn't think ahead (implementation)...
+	 * @param fileName The image file name to be matched.
+	 * @return The String name associated with the specified image file name, according to Images. Returns
+	 *  null if the specified file name does not exist.
+	 */
+	private String getImageNameFromFileName(String fileName){
+		for(Images image : Images.values()){
+			if(image.getFileName().equalsIgnoreCase(fileName))
+				return image.getName();
+		}
+		return null;
+	}
+	
+	/**
+	 * Used to determine if a given word's prefix is "a" or "an".
+	 * @param word A String of the word to be analyzed.
+	 * @return The String "an" if the specified word begins with a vowel, null if the specified word is null
+	 *  or "", or "a" otherwise.
+	 */
+	private String aOrAn(String word){
+		if(word == null || word.equals(""))
+			return null;
+		char firstChar = word.toLowerCase().charAt(0);
+		if(firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
+			return "an";
+		else
+			return "a";
 	}
 	
 	/**
@@ -146,24 +216,14 @@ public class PreKTestMatching implements TestableObserver{
 	 * Displays the question and two panels.
 	 */
 	private void makeQuestion(){
-		String question    = "Which picture shows " + correctAnswer;
-		question += (correctAnswer == 1) ? " apple?" : " apples?";
-		AppleBoard[] board = AppleBoard.values();
-		String leftImagePath;
-		String rightImagePath;
-		int answerLoc = getRandomInt(0, 1);
-		if(answerLoc == 0){
-			answerString   = QuestionPanelSelect.Answer.LEFT.getStringValue();
-			leftImagePath  = board[correctAnswer].getPath();
-			rightImagePath = board[wrongAnswer].getPath();
-		}
-		else{
-			answerString   = QuestionPanelSelect.Answer.RIGHT.getStringValue();
-			leftImagePath  = board[wrongAnswer].getPath();
-			rightImagePath = board[correctAnswer].getPath();
-		}
+		String typeString = (questionType == HALF) ? "<b><u>half</u></b>" : "a <b><u>whole</u></b>";
+		String question   = "Which picture shows " + typeString + " ";
+		if(questionType == HALF)
+			question += aOrAn(imageName) + " " + imageName + "?";
+		else
+			question += imageName + "?";
 		try {
-			testPanel.showQuestion(question, (currentQuestionNum), leftImagePath, rightImagePath);
+			testPanel.showQuestion(question, currentQuestionNum, leftImagePath, rightImagePath);
 		} catch (IOException e) {
 			manager.handleException(e);
 		}
@@ -199,30 +259,14 @@ public class PreKTestMatching implements TestableObserver{
 	}
 	
 	/**
-	 * Used to determine if the combination of numberToMatch and aDifferentNumber
-	 *  has been used in a previous question.
-	 * @param numberToMatch An int. The number that the user is asked to match.
-	 * @param aDifferentNumber An int. The number of objects on the panel that does not have the
-	 *  quantity that the user is asked to match.
-	 * @return A boolean. True if the combination of numberToMatch and aDifferentNumber
-	 *  has been used in a previous question; false otherwise.
-	 */
-	private boolean isUsedQuestion(int numberToMatch, int aDifferentNumber){
-		return isNumberSetUsed[numberToMatch][aDifferentNumber];
-	}
-	
-	/**
-	 * Used to initialize the imagePaths and isNumberSetUsed arrays. The imagePaths arrays are
-	 *  set to the values specified in the AppleBoard enum. The isNumberSetUsed array is set
-	 *  to prevent equal number combinations from being asked (asked to match 5, but both panels
-	 *  would show 5 objects).
+	 * Used to initialize the halfPaths and wholePaths arrays.
 	 */
 	private void initArrays(){
-		imagePaths       = new ArrayList<String>();
-		AppleBoard[] board = AppleBoard.values();
-		for(int i = 0; i < board.length; i++){
-			imagePaths.add(board[i].getPath());
-			isNumberSetUsed[i][i] = true;
+		halfPaths       = new ArrayList<String>();
+		wholePaths      = new ArrayList<String>();
+		for(Images image:Images.values()){
+			halfPaths.add(image.getFileName());
+			wholePaths.add(image.getFileName());
 		}
 	}
 	
@@ -277,9 +321,19 @@ public class PreKTestMatching implements TestableObserver{
 	 *  Adds the created String to the wrongAnswers ArrayList.
 	 */
 	private void logWrongAnswer(){
-		String question = "Question " + (currentQuestionNum - 1) + ": Match(" + correctAnswer + ")";
-		String entry    = question + " Student Answer: (" + wrongAnswer + ")"
-								   + " Correct Answer: (" + correctAnswer + ").";
+		String entry;
+		String question;
+		if(questionType == HALF){
+			question = "Question " + (currentQuestionNum - 1) + ": Fraction(Which is half "
+							+ aOrAn(imageName) + " " + imageName.toLowerCase() + "?)";
+			entry    = question + " Student Answer: (A whole " + imageName.toLowerCase() + ")"
+					    	+ " Correct Answer: (Half " + aOrAn(imageName) + " " + imageName.toLowerCase() + ").";
+		}else{
+			question = "Question " + (currentQuestionNum - 1) + ": Fraction(Which is a whole "
+							+ imageName.toLowerCase() + "?)";
+			entry    = question + " Student Answer: (Half " + aOrAn(imageName) + " " + imageName.toLowerCase()
+						+ ")" + " Correct Answer: (A whole " + imageName.toLowerCase() + ").";
+		}
 		wrongAnswers.add(entry);
 	}
 	
@@ -291,7 +345,7 @@ public class PreKTestMatching implements TestableObserver{
 	 */
 	private void makeTestDetailFile() throws IOException{
 		if(wrongAnswers.size() > 0){
-			String filePath = manager.getTestFolderPath() + "\\Matching\\";
+			String filePath = manager.getTestFolderPath() + "\\Fractions\\";
 			String fileName = TextFileMaker.getTimeStamp() + "_(" + difficulty.getName() + ")";
 			String[] textArray = wrongAnswers.toArray(new String[wrongAnswers.size()]);
 			TextFileMaker.writeArray(filePath, fileName, textArray);
@@ -334,7 +388,7 @@ public class PreKTestMatching implements TestableObserver{
 				try {
 					int grade = getGrade();
 					boolean isBetter = isBetterGrade(numCorrect);
-					String fileName = "Matching(" + difficulty.getName() + ")";
+					String fileName = "Fractions(" + difficulty.getName() + ")";
 					if(isBetter)
 						manager.setGrade(TEST_BUTTON, difficulty, numCorrect, maxNumberOfQuestions);
 					makeTestDetailFile();
@@ -393,6 +447,54 @@ public class PreKTestMatching implements TestableObserver{
 			} catch (IOException e) {
 				manager.handleException(e);
 			}
+		}
+	}
+	
+	/**
+	 * This enum is used to associate & store image file names & image names to a constant.
+	 * @author Kenneth Chin
+	 */
+	private enum Images{
+		APPLE   ("Apple"      , "apple.png"),
+		COOKIE  ("Cookie"     , "cookie.png"),
+		DOLLAR  ("Dollar"     , "dollar.png"),
+		QUARTER ("Quarter"    , "quarter.png"),
+		PIZZA   ("Pizza"      , "pizza.png"),
+		RAINBOW ("Rainbow"    , "rainbow.png"),
+		SHIRT   ("Shirt"      , "shirt.png"),
+		BIKE    ("Bicycle"    , "bike.png"),
+		GLASSES ("Eye Glasses", "eye_glasses.png"),
+		SCISSORS("Scissors"   , "scissors.png"),
+		MOON    ("Moon"       , "moon.png"),
+		WATER   ("Water"      , "water.png");
+		
+		private String fileName;
+		private String name;
+		
+		/**
+		 * The Images constructor.
+		 * @param name A String describing the image.
+		 * @param fileName A String describing the image's file name.
+		 */
+		private Images(String name, String fileName){
+			this.fileName = fileName;
+			this.name     = name;
+		}
+		
+		/**
+		 * Used to obtain a String describing this image's file name.
+		 * @return A String describing this image's file name.
+		 */
+		public String getFileName(){
+			return fileName;
+		}
+		
+		/**
+		 * Used to obtain a String describing this image's name.
+		 * @return A String describing this image's name.
+		 */
+		public String getName(){
+			return name;
 		}
 	}
 }

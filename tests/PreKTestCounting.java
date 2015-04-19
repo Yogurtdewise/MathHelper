@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.10.0
- * Version Date: 04/16/2015
+ * Version:      0.11.0
+ * Version Date: 04/19/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -228,7 +228,7 @@ public class PreKTestCounting implements TestableObserver{
 			message = "\"" +answer + "\"" + " is correct!";
 		else
 			message = "\"" + answer + "\""
-					+ " is incorrect! <font color=\"#00FF00\">The correct answer is: " + currentAnswer + "</font>";
+					+ " is incorrect! The correct answer is: " + currentAnswer;
 		try {
 			testPanel.showAnswer(message, isCorrect);
 		} catch (IOException e) {
@@ -259,7 +259,7 @@ public class PreKTestCounting implements TestableObserver{
 	 * @param wrongAnswer A String representing the incorrect answer that a user gave to currentQuestion.
 	 */
 	private void logWrongAnswer(String wrongAnswer){
-		String question = "Qustion " + (currentQuestionNum-1) + ": (" + currentQuestion + ")";
+		String question = "Question " + (currentQuestionNum-1) + ": (" + currentQuestion + ")";
 		String entry    = question + " Student Answer: (" + wrongAnswer + ")"
 								   + " Correct Answer: (" + currentAnswer + ").";
 		wrongAnswers.add(entry);
@@ -319,7 +319,7 @@ public class PreKTestCounting implements TestableObserver{
 				if(isBetter)
 					manager.setGrade(TEST_BUTTON, difficulty, numCorrect, maxNumberOfQuestions);
 				makeTestDetailFile();
-				new RewardScreen(manager, fileName, grade, isBetter, manager.getRewardsFolderPath());
+				new RewardScreen(manager, TEST_BUTTON, difficulty, grade, isBetter, manager.getRewardsFolderPath());
 			}catch(IOException e){
 				manager.handleException(e);
 			}

@@ -250,7 +250,7 @@ public class PreKTestSequences implements TestableObserver{
 	 *  Adds the created String to the wrongAnswers ArrayList.
 	 */
 	private void logWrongAnswer(){
-		String question = "Qustion " + (currentQuestionNum - 1) + ": Find the image that shows (" 
+		String question = "Question " + (currentQuestionNum - 1) + ": Find the image that shows (" 
 									 + boards[correctAnswer].getName() + ") place.";
 		String entry    = question + " Student Answer: (" + boards[wrongAnswer].getName() + ")"
 								   + " Correct Answer: (" + boards[correctAnswer].getName() + ").";
@@ -312,7 +312,7 @@ public class PreKTestSequences implements TestableObserver{
 					if(isBetter)
 						manager.setGrade(TEST_BUTTON, difficulty, numCorrect, maxNumberOfQuestions);
 					makeTestDetailFile();
-					new RewardScreen(manager, fileName, grade, isBetter, manager.getRewardsFolderPath());
+					new RewardScreen(manager, TEST_BUTTON, difficulty, grade, isBetter, manager.getRewardsFolderPath());
 				}catch (IOException e) {
 					manager.handleException(e);
 				}

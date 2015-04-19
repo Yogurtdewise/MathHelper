@@ -30,7 +30,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import project.buttons.PreKModuleSelectTestButtons;
-import project.constants.AppleBoard;
 import project.constants.DifficultyLevel;
 import project.interfaces.ModuleSelectButtonInterface;
 import project.interfaces.TestableObserver;
@@ -41,25 +40,25 @@ import project.tools.QuestionPanelSelect;
 import project.tools.TextFileMaker;
 
 /**
- * This class is used to test PreK-K students on number Matching skills. It displays two selectable
- *  panels, each with a quantity of some object. A student is asked to select the panel that has the
- *  same number of objects as specified in a question, then click the "Submit" button. While a student
- *  may be asked to match the same number multiple times, the combination of panel quantities will
- *  never be used twice.
+ * This class is used to test PreK-K students on number US Coin recognition skills. It displays two
+ *  selectable panels, each with a US coin. A student is asked to select the panel that matches
+ *  the attributes specified in a question, then click the "Submit" button. While a student
+ *  may be asked to match the same coin multiple times, the combination of images and question types
+ *  (name or vcent value) will never be used twice.
  * @author Kenneth Chin
  */
-public class PreKTestMatching implements TestableObserver{
+public class PreKTestCoins implements TestableObserver{
 	
 	//The ModuleSelectButtonInterface that describes this test.
-	private static final ModuleSelectButtonInterface TEST_BUTTON = PreKModuleSelectTestButtons.Button.MATCHING;
+	private static final ModuleSelectButtonInterface TEST_BUTTON = PreKModuleSelectTestButtons.Button.COINS;
 
-	private static final int LOWEST_INT    = 0;         //MUST be zero.
-	private static final int HIGHEST_INT   = 10;        //The highest value that may be asked in a question.
+	private static final int NUM_QUESTION_TYPES = 2;   //The number of question types (name or value).
+	private static final int NAME_TYPE = 0;  //The constant that indicates a question that identifies a coin's name.
 	
 	//Difficulty settings. Note: MUST be less than the maximum number of question permutations.
-	private static final int EASY_MAX_QUESTIONS = 10;   //The maximum number of questions for the "Easy" difficulty.
-	private static final int NORM_MAX_QUESTIONS = 15;   //The maximum number of questions for the "Normal" difficulty.
-	private static final int HARD_MAX_QUESTIONS = 20;   //The maximum number of questions for the "Hard" difficulty.
+	private static final int EASY_MAX_QUESTIONS = 8;    //The maximum number of questions for the "Easy" difficulty.
+	private static final int NORM_MAX_QUESTIONS = 10;   //The maximum number of questions for the "Normal" difficulty.
+	private static final int HARD_MAX_QUESTIONS = 12;   //The maximum number of questions for the "Hard" difficulty.
 	private int maxNumberOfQuestions = EASY_MAX_QUESTIONS; //The actual maximum number of questions for this test.
 	
 	private Random rng = new Random(System.currentTimeMillis()); //A random number generator.
@@ -68,14 +67,15 @@ public class PreKTestMatching implements TestableObserver{
 	private DifficultyLevel difficulty;   //The current DifficultyLevel of this test.
 	
 	private int currentQuestionNum = 1;   //The current question number.
-	private ArrayList<String> imagePaths; //The file paths of all AppleBoard images, in the order of the enum.
-	//The set (correctAnswer, wrongAnswer). Used to determine if a correct answer's panel was used
-	//  with a wrongAnswer's panel.
-	private boolean[][] isNumberSetUsed = new boolean[(HIGHEST_INT + 2)][(HIGHEST_INT + 2)];
-	private int correctAnswer;   //The value and index of the panel that is correct.
-	private int wrongAnswer;     //The value and index of the panel that is incorrect.
-	private String answerString; //The correct answer's panel String ("left" or "right").
-	private int numCorrect = 0;  //The number of correct answers obtained from the user.
+
+	private boolean[][][] isNumberSetUsed = new boolean[Coin.values().length][Coin.values().length][NUM_QUESTION_TYPES];
+	private String correctAnswer;   //The name or value of the correct answer's coin.
+	private String wrongAnswer;     //The name or value of the wrong answer's coin.
+	private int correctAnswerIndex; //The Coin.values() index of the correct answer's coin.
+	private int wrongAnswerIndex;   //The Coin.values() index of the wrong answer's coin.
+	private int questionType;       //Used to indicate a name (0) or value (1) question type.
+	private String answerString;    //The correct answer's panel String ("left" or "right").
+	private int numCorrect = 0;     //The number of correct answers obtained from the user.
 	private ArrayList<String> wrongAnswers = new ArrayList<String>(); //Used to track incorrect answers.
 	
 	private QuestionPanelSelect testPanel; //The QuestionPanelSelect that will display questions.
@@ -85,13 +85,13 @@ public class PreKTestMatching implements TestableObserver{
 	private MainWindow mainWindow; //The MainWindow that will have questions displayed on.
 	
 	/**
-	 * The PreKTestMatching constructor. Creates and displays a Matching test for PreK-K students.
+	 * The PreKTestCoins constructor. Creates and displays a Coins test for PreK-K students.
 	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 * @throws IOException Thrown if any image file is missing.
 	 */
-	public PreKTestMatching(GUIManager manager, boolean isPractice, DifficultyLevel difficulty) throws IOException{
+	public PreKTestCoins(GUIManager manager, boolean isPractice, DifficultyLevel difficulty) throws IOException{
 		this.manager    = manager;
 		this.mainWindow = manager.getMainWindow();
 		this.isPractice = isPractice;
@@ -111,7 +111,7 @@ public class PreKTestMatching implements TestableObserver{
 	 */
 	public void playTutorial(){
 	    try{
-	    	String filePath = "audio\\Test Tutorials\\Matching.wav";
+	    	String filePath = "audio\\Test Tutorials\\Coins.wav";
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
 	        clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
@@ -131,14 +131,23 @@ public class PreKTestMatching implements TestableObserver{
 	}
 	
 	/**
-	 * Used to obtain an unused combination of panel quantities.
+	 * Used to obtain an unused combination of panel images and question type.
 	 */
 	private void getValues(){
 		do{
-			correctAnswer = getRandomInt(LOWEST_INT, HIGHEST_INT);
-			wrongAnswer   = getRandomInt(LOWEST_INT, HIGHEST_INT);
-		}while(correctAnswer == wrongAnswer || isUsedQuestion(correctAnswer, wrongAnswer));
-		isNumberSetUsed[correctAnswer][wrongAnswer] = true;
+			questionType       = getRandomInt(0, NUM_QUESTION_TYPES -1);
+			correctAnswerIndex = getRandomInt(0, Coin.values().length - 1);
+			wrongAnswerIndex   = getRandomInt(0, Coin.values().length - 1);
+		}while(correctAnswerIndex == wrongAnswerIndex
+				|| isNumberSetUsed[correctAnswerIndex][wrongAnswerIndex][questionType]);
+		if(questionType == NAME_TYPE){
+			correctAnswer = Coin.values()[correctAnswerIndex].getName().toLowerCase();
+			wrongAnswer   = Coin.values()[wrongAnswerIndex].getName().toLowerCase();
+		}else{
+			correctAnswer = Coin.values()[correctAnswerIndex].getCentValue();
+			wrongAnswer   = Coin.values()[wrongAnswerIndex].getCentValue();
+		}
+		isNumberSetUsed[correctAnswerIndex][wrongAnswerIndex][questionType] = true;
 	}
 	
 	/**
@@ -146,24 +155,27 @@ public class PreKTestMatching implements TestableObserver{
 	 * Displays the question and two panels.
 	 */
 	private void makeQuestion(){
-		String question    = "Which picture shows " + correctAnswer;
-		question += (correctAnswer == 1) ? " apple?" : " apples?";
-		AppleBoard[] board = AppleBoard.values();
+		String question;
+		if(questionType == NAME_TYPE){
+			question = "Which picture shows a <b><u>" + correctAnswer + "</u></b>?";
+		}else{
+			question = "Which picture shows a <b><u>" + correctAnswer + "&cent;</u></b>?";
+		}
 		String leftImagePath;
 		String rightImagePath;
 		int answerLoc = getRandomInt(0, 1);
 		if(answerLoc == 0){
 			answerString   = QuestionPanelSelect.Answer.LEFT.getStringValue();
-			leftImagePath  = board[correctAnswer].getPath();
-			rightImagePath = board[wrongAnswer].getPath();
+			leftImagePath  = Coin.values()[correctAnswerIndex].getFilePath();
+			rightImagePath = Coin.values()[wrongAnswerIndex].getFilePath();
 		}
 		else{
 			answerString   = QuestionPanelSelect.Answer.RIGHT.getStringValue();
-			leftImagePath  = board[wrongAnswer].getPath();
-			rightImagePath = board[correctAnswer].getPath();
+			leftImagePath  = Coin.values()[wrongAnswerIndex].getFilePath();
+			rightImagePath = Coin.values()[correctAnswerIndex].getFilePath();
 		}
 		try {
-			testPanel.showQuestion(question, (currentQuestionNum), leftImagePath, rightImagePath);
+			testPanel.showQuestion(question, currentQuestionNum, leftImagePath, rightImagePath);
 		} catch (IOException e) {
 			manager.handleException(e);
 		}
@@ -199,30 +211,13 @@ public class PreKTestMatching implements TestableObserver{
 	}
 	
 	/**
-	 * Used to determine if the combination of numberToMatch and aDifferentNumber
-	 *  has been used in a previous question.
-	 * @param numberToMatch An int. The number that the user is asked to match.
-	 * @param aDifferentNumber An int. The number of objects on the panel that does not have the
-	 *  quantity that the user is asked to match.
-	 * @return A boolean. True if the combination of numberToMatch and aDifferentNumber
-	 *  has been used in a previous question; false otherwise.
-	 */
-	private boolean isUsedQuestion(int numberToMatch, int aDifferentNumber){
-		return isNumberSetUsed[numberToMatch][aDifferentNumber];
-	}
-	
-	/**
-	 * Used to initialize the imagePaths and isNumberSetUsed arrays. The imagePaths arrays are
-	 *  set to the values specified in the AppleBoard enum. The isNumberSetUsed array is set
-	 *  to prevent equal number combinations from being asked (asked to match 5, but both panels
-	 *  would show 5 objects).
+	 * Used to initialize the  isNumberSetUsed array to prevent the same images being shown
+	 *  in a single question (asked to choose dime, but both panels would show dimes).
 	 */
 	private void initArrays(){
-		imagePaths       = new ArrayList<String>();
-		AppleBoard[] board = AppleBoard.values();
-		for(int i = 0; i < board.length; i++){
-			imagePaths.add(board[i].getPath());
-			isNumberSetUsed[i][i] = true;
+		for(int i = 0; i < Coin.values().length; i++){
+			isNumberSetUsed[i][i][0] = true;
+			isNumberSetUsed[i][i][1] = true;
 		}
 	}
 	
@@ -277,9 +272,17 @@ public class PreKTestMatching implements TestableObserver{
 	 *  Adds the created String to the wrongAnswers ArrayList.
 	 */
 	private void logWrongAnswer(){
-		String question = "Question " + (currentQuestionNum - 1) + ": Match(" + correctAnswer + ")";
-		String entry    = question + " Student Answer: (" + wrongAnswer + ")"
-								   + " Correct Answer: (" + correctAnswer + ").";
+		String question;
+		String entry;
+		if(questionType == NAME_TYPE){
+			question = "Question " + (currentQuestionNum - 1) + ": Coin(" + correctAnswer + ")";
+			entry    = question + " Student Answer: (" + wrongAnswer + ")"
+									   + " Correct Answer: (" + correctAnswer + ").";
+		}else{
+			question = "Question " + (currentQuestionNum - 1) + ": Coin(" + correctAnswer + "\u00A2)";
+			entry    = question + " Student Answer: (" + wrongAnswer + "\u00A2)"
+									   + " Correct Answer: (" + correctAnswer + "\u00A2).";
+		}
 		wrongAnswers.add(entry);
 	}
 	
@@ -291,7 +294,7 @@ public class PreKTestMatching implements TestableObserver{
 	 */
 	private void makeTestDetailFile() throws IOException{
 		if(wrongAnswers.size() > 0){
-			String filePath = manager.getTestFolderPath() + "\\Matching\\";
+			String filePath = manager.getTestFolderPath() + "\\Coins\\";
 			String fileName = TextFileMaker.getTimeStamp() + "_(" + difficulty.getName() + ")";
 			String[] textArray = wrongAnswers.toArray(new String[wrongAnswers.size()]);
 			TextFileMaker.writeArray(filePath, fileName, textArray);
@@ -334,7 +337,7 @@ public class PreKTestMatching implements TestableObserver{
 				try {
 					int grade = getGrade();
 					boolean isBetter = isBetterGrade(numCorrect);
-					String fileName = "Matching(" + difficulty.getName() + ")";
+					String fileName = "Coins(" + difficulty.getName() + ")";
 					if(isBetter)
 						manager.setGrade(TEST_BUTTON, difficulty, numCorrect, maxNumberOfQuestions);
 					makeTestDetailFile();
@@ -393,6 +396,60 @@ public class PreKTestMatching implements TestableObserver{
 			} catch (IOException e) {
 				manager.handleException(e);
 			}
+		}
+	}
+	
+	/**
+	 * This enum is used to define different US coins. Each coin is associated with a name, cent value,
+	 *  and image file name.
+	 * @author Kenneth Chin
+	 */
+	private enum Coin{
+		PENNY  ("Penny"  ,"1" , "penny.png"),
+		NICKEL ("Nickel" ,"5" , "nickel.png"),
+		DIME   ("Dime"   ,"10", "dime.png"),
+		QUARTER("Quarter","25", "quarter.png");
+		
+		private String filePath;
+		private String centValue;
+		private String name;
+		
+		private static final String imagePath = "\\images\\test\\coins\\";
+		
+		/**
+		 * The Coin constructor.
+		 * @param name A String describing this Coin's name.
+		 * @param centValue A String describing this Coin's cent value.
+		 * @param fileName A String describing this Coin's image file name.
+		 */
+		private Coin(String name, String centValue, String fileName){
+			this.name      = name;
+			this.centValue = centValue;
+			this.filePath  = imagePath + fileName;
+		}
+		
+		/**
+		 * Used to obtain a String describing this Coin's name.
+		 * @return A String describing this Coin's name.
+		 */
+		public String getName(){
+			return name;
+		}
+		
+		/**
+		 * Used to obtain a String describing this Coin's cent value.
+		 * @return A String describing this Coin's cent value.
+		 */
+		public String getCentValue(){
+			return centValue;
+		}
+		
+		/**
+		 * Used to obtain a String describing this Coin's image file path from the program's root directory.
+		 * @return A String describing this Coin's image file path from the program's root directory.
+		 */
+		public String getFilePath(){
+			return filePath;
 		}
 	}
 }

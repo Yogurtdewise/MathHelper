@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.10.0
- * Version Date: 04/16/2015
+ * Version:      0.11.0
+ * Version Date: 04/19/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -28,7 +28,10 @@ import project.run.GUIManager;
 import project.screens.DifficultySelectScreen;
 import project.screens.ModuleSelectScreen;
 import project.tests.PreKTestArithmetic;
+import project.tests.PreKTestCoins;
+import project.tests.PreKTestComparison;
 import project.tests.PreKTestCounting;
+import project.tests.PreKTestFractions;
 import project.tests.PreKTestMatching;
 import project.tests.PreKTestSequences;
 import project.tools.ContentPane;
@@ -205,45 +208,93 @@ public class PreKModuleSelectPracticeButtons implements EnumerableButtonFactory{
 		 * The Comparison Prek-K Practice module button.
 		 */
 		COMPARISON ("Comparison","4_comparison.png", 593, 400) {
+			
+			private GUIManager manager;
+			private DifficultySelectScreen difficultyScreen;
+			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				System.out.println("Opening the DifficultySelectScreen!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					difficultyScreen = new DifficultySelectScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				// TODO Auto-generated method stub
-				
+				System.out.println("Opening the " + level.getName() + " " + getName() + " Practice!");
+				difficultyScreen.tearDown();
+				try {
+					new PreKTestComparison(manager, true, level);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Fractions Prek-K Practice module button.
 		 */
 		FRACTIONS  ("Fractions", "5_fractions.png" , 300, 225) {
+			
+			private GUIManager manager;
+			private DifficultySelectScreen difficultyScreen;
+			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				System.out.println("Opening the DifficultySelectScreen!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					difficultyScreen = new DifficultySelectScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				// TODO Auto-generated method stub
-				
+				System.out.println("Opening the " + level.getName() + " " + getName() + " Practice!");
+				difficultyScreen.tearDown();
+				try {
+					new PreKTestFractions(manager, true, level);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Coins Prek-K Practice module button.
 		 */
 		COINS      ("Coins",     "6_coins.png"     , 590, 225) {
+			
+			private GUIManager manager;
+			private DifficultySelectScreen difficultyScreen;
+			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				System.out.println("Opening the DifficultySelectScreen!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					difficultyScreen = new DifficultySelectScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				// TODO Auto-generated method stub
-				
+				System.out.println("Opening the " + level.getName() + " " + getName() + " Practice!");
+				difficultyScreen.tearDown();
+				try {
+					new PreKTestCoins(manager, true, level);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
@@ -359,6 +410,11 @@ public class PreKModuleSelectPracticeButtons implements EnumerableButtonFactory{
 		@Override
 		public ContentPane getButton(){
 			return button;
+		}
+		
+		@Override
+		public int getOrdinal(){
+			return this.ordinal();
 		}
 		
 		@Override

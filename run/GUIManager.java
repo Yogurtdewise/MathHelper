@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.10.0
- * Version Date: 04/16/2015
+ * Version:      0.11.0
+ * Version Date: 04/19/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -347,9 +347,35 @@ public final class GUIManager{
 	}
 	
 	/**
+	 * Used to increment the current user's lastActiveTest by one(enable use of the next test).
+	 *  If the user already has access to all tests, the lastActiveTest will not be incremented.
+	 *  If the passed testNumber is less than the student's current lastActiveTest, then
+	 *  lastActiveTest will not be incremented.
+	 * @param testNumber An int describing the test's position in the button order. This value
+	 *  can be determined by using ModuleSelectButtonInterface.ordinal() + 1, where the 
+	 *  ModuleSelectButtonInterface is of the test's enum type.
+	 */
+	public void incrementHighestTest(int testNumber){
+		int maxValue;
+		int lastActive = database.getLastActiveTest(userName);
+		if(lastActive > testNumber)
+			return;
+		switch(gradeLevel){
+			case 0: maxValue = PreKModuleSelectTestButtons.Button.values().length  ; break;
+			case 1: maxValue = Grade1ModuleSelectTestButtons.Button.values().length; break;
+			case 2: maxValue = Grade3ModuleSelectTestButtons.Button.values().length; break;
+			default: maxValue = PreKModuleSelectTestButtons.Button.values().length ; break;
+		}
+		if(lastActive < maxValue){
+			lastActive++;
+			database.setLastActiveTest(userName, lastActive);
+		}
+	}
+	
+	/**
 	 * Used to write the database object to disk.
 	 */
-	private void writeDatabase(){
+	public void writeDatabase(){
 		try {
 			FileOutputStream fout = new FileOutputStream(DB_FILEPATH);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
@@ -530,13 +556,19 @@ public final class GUIManager{
 		//TODO e.printStackTrace() should be removed after proper execution is developed.
 		e.printStackTrace();
 		String errorMessage;
+		String localMessage;
 		if(e.getMessage() == null)
 			errorMessage = "No message provided.";
 		else
 			errorMessage = e.getMessage();
+		if(e.getLocalizedMessage() == null)
+			localMessage = "No local message provided.";
+		else
+			localMessage = e.getLocalizedMessage();
 			
 		StackTraceElement[] stackTrace = e.getStackTrace();
 		errorLog.append("ERROR " + errorNumber + ": " + errorMessage + "\r\n");
+		errorLog.append("Local Message: " + localMessage + "\r\n");
 		for(StackTraceElement element: stackTrace){
 			errorLog.append("    " + element.toString() + "\r\n");
 		}
@@ -599,7 +631,8 @@ public final class GUIManager{
 	
 	private void buidRewardScreen() throws IOException{
 		int grade = 80;
-		new RewardScreen(this, "GUIManager_Test", grade, true, "Rewards\\");
+		new RewardScreen(this, PreKModuleSelectTestButtons.Button.ARITHMETIC,
+				DifficultyLevel.EASY, grade, true, "Rewards\\");
 	}
 	
 	private void buildChooseOneTest() throws IOException{
