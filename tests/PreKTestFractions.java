@@ -1,6 +1,6 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.0
+ * Version:      0.11.1
  * Version Date: 04/19/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing

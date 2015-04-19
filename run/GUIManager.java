@@ -1,6 +1,6 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.0
+ * Version:      0.11.1
  * Version Date: 04/19/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
@@ -50,8 +50,8 @@ import project.buttons.PreKModuleSelectTutorialButtons;
 import project.constants.DifficultyLevel;
 import project.constants.Operator;
 import project.database.ModuleReportSummary;
-import project.database.PhonyDatabase;
 import project.database.ReportCard;
+import project.database.UserDatabase;
 import project.interfaces.ModuleSelectButtonInterface;
 import project.screens.MathHelperLogin;
 import project.screens.PreKModuleSelect;
@@ -129,7 +129,7 @@ public final class GUIManager{
 	//private String        userName   = "TheApple"; //Grade 3-4 username.
 	private String studentFolderName = null;    //The current user's directory name. (lastname, firstname)
 	private int           gradeLevel = 0;       //An int describing the the current user's grade level.
-	private PhonyDatabase database;
+	private UserDatabase database;
 	
 	private MainWindow mainWindow; //The root container of the Main Window.
 	
@@ -165,7 +165,7 @@ public final class GUIManager{
 		if(dbExists())
 			readDatabase();
 		else
-			database   = new PhonyDatabase();
+			database   = new UserDatabase();
 	}
 	
 	/**
@@ -394,7 +394,7 @@ public final class GUIManager{
 		try {
 			FileInputStream fis = new FileInputStream(DB_FILEPATH);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			database = (PhonyDatabase)ois.readObject();
+			database = (UserDatabase)ois.readObject();
 			ois.close();
 			fis.close();
 		} catch (IOException | ClassNotFoundException e) {
