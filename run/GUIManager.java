@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.1
- * Version Date: 04/19/2015
+ * Version:      0.11.2
+ * Version Date: 04/20/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -124,7 +124,7 @@ public final class GUIManager{
 	
 	//TODO Test data that should be removed or accessed differently once a database is implemented.
 	//The current user's data.
-	private String        userName   = "Johnny"; //The current user's username.
+	private static String userName   = "Johnny"; //The current user's username.
 	//private String        userName   = "Janie";    //Grade 1-2 username.
 	//private String        userName   = "TheApple"; //Grade 3-4 username.
 	private String studentFolderName = null;    //The current user's directory name. (lastname, firstname)
@@ -203,6 +203,21 @@ public final class GUIManager{
 	}
 	
 	/**
+	 * Opens the Welcome Screen using the specified user's data. The user's data is obtained from
+	 *  the database's key value that matches the specified username. If the username does not exist
+	 *  in the database, the default user is loaded & used to display a Welcome Screen.
+	 * @param userName The String that is used as the database's key for the current user.
+	 */
+	public static void runGUI(String userName){
+		if(userName == null)
+			runGUI();
+		else{
+			setUserName(userName);
+			runGUI();
+		}
+	}
+	
+	/**
 	 * Used to initialize the current user's data & open a WelcomeScreen that is appropriate for the user.
 	 */
 	private void start(){
@@ -236,6 +251,15 @@ public final class GUIManager{
 				handleException(e);
 			}
 		}
+	}
+	
+	/**
+	 * A helper method used to set the userName field.
+	 * Note: This method should be called before runGUI() is called.
+	 * @param userName The String that is used as the database's key for the current user.
+	 */
+	private static void setUserName(String userName){
+		GUIManager.userName = userName;
 	}
 	
 	/**
@@ -315,6 +339,31 @@ public final class GUIManager{
 	 */
 	public String getPassword(String username){
 		return database.getPassword(username);
+	}
+	
+	/**
+	 * Used to add a user to the database. Returns true if the specified user was successfully added to the
+	 *  database; false otherwise.
+	 * Reasons adding a user may fail: The specified userName is already used, OR a null value was passed
+	 *  to this method, OR gradeLevel is not 0,1, or 2.
+	 * @param userName The String that is used as the database's key for the current user.
+	 * @param password A String that describes the password that will be associated with the specified userName.
+	 * @param firstName A String that describes the "First Name" that will be associated with the specified userName.
+	 * @param lastName A String that describes the "Last Name" that will be associated with the specified userName.
+	 * @param gradeLevel An int that describes the "Grade Level" that will be associated with the specified userName.
+	 *  The value of gradeLevel may be 0 (for PreK-K users), 1 (for Grade 1-2 users), or 2 (for Grade 3-4 users).
+	 * @return A boolean indicating true if the specified user was successfully added to the database; false otherwise.
+	 */
+	public boolean addUser(String userName, String password, String firstName, String lastName, int gradeLevel){
+		if(userName == null || password == null || firstName == null || lastName == null)
+			return false;
+		if(gradeLevel < 0 || gradeLevel < 2)
+			return false;
+		String pass = getPassword(userName);
+		if(pass == null)
+			return false;
+		database.addUser(userName, password, firstName, lastName, gradeLevel);
+		return true;
 	}
 	
 	/**

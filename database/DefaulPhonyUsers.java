@@ -26,18 +26,20 @@ public class DefaulPhonyUsers {
 	//creating fake user John
 	private void createPhonyJohn(){
 		String userName   = "Johnny";
+		String password   = "appleseed";
 		String firstName  = "John";
 		String lastName   = "Smith";
 		int    gradeLevel = 0;
 		int    lastTest   = 7;
 		
 		//fake users password set to "password" for testing purposes
-		database.addUser(userName, "password", firstName, lastName, gradeLevel);
+		database.addUser(userName, password, firstName, lastName, gradeLevel);
 	}
 	
 	//creating fake user Jane
 	private void createPhonyJane(){
 		String userName   = "Janie";
+		String password   = "gottagun";
 		String firstName  = "Jane";
 		String lastName   = "Doe";
 		int    gradeLevel = 1;
@@ -58,12 +60,13 @@ public class DefaulPhonyUsers {
 		reportMap.put(Grade1ModuleSelectTestButtons.Button.FINAL,      new ModuleReportSummary(-1, 10, -1, 10, -1, 10));
 		
 
-		database.addUser(userName, "password", firstName, lastName, gradeLevel, reportMap);
+		database.addUser(userName, password, firstName, lastName, gradeLevel, reportMap);
 	}
 	
 	// creating fake user Isaac
 	private void createPhonyIssac(){
 		String userName   = "TheApple";
+		String password   = "hitme";
 		String firstName  = "Issac";
 		String lastName   = "Newton";
 		int    gradeLevel = 2;
@@ -84,7 +87,7 @@ public class DefaulPhonyUsers {
 		reportMap.put(Grade3ModuleSelectTestButtons.Button.ESTIMATE,   new ModuleReportSummary(-1, 10, -1, 10, -1, 10));
 		reportMap.put(Grade3ModuleSelectTestButtons.Button.FINAL,      new ModuleReportSummary(-1, 10, -1, 10, -1, 10));
 		
-		database.addUser(userName, "", firstName, lastName, gradeLevel, reportMap);
+		database.addUser(userName, password, firstName, lastName, gradeLevel, reportMap);
 
 	}
 }
