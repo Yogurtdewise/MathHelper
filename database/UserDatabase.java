@@ -113,7 +113,7 @@ public class UserDatabase implements Serializable{
 		database.get(userName).setPassword(password);
 	}
 	
-	/*method sets First name value*/
+	/* method sets First name value*/
 	public void setFirstName(String userName, String firstName){
 		database.get(userName).setFirstName(firstName);
 	}
