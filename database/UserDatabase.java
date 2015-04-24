@@ -39,12 +39,9 @@ public class UserDatabase implements Serializable{
 	DefaulPhonyUsers defaultUser = new DefaulPhonyUsers(this);  
 		defaultUser.populatePhonyUsers();
 	}
-<<<<<<< HEAD
-	
+
 	/**this method will add users to the database. It will pass all needed values 
-=======
-	/*this method will add users to the database. It will pass all needed values 
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
+	/*this method will add users to the database. It will pass all needed values
 	*to it such as user name, password, first name, last name and grade level. 
 	*It will also pass the report of all taken tests
 	 */
@@ -84,55 +81,40 @@ public class UserDatabase implements Serializable{
 	};
 	
 	
-<<<<<<< HEAD
 	/** method returns password value*/
-=======
 	/* method returns password value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public String getPassword(String userName){
 		if(database.get(userName)==null)
 			return null;
 		return database.get(userName).getPassword();
 	}
 	
-<<<<<<< HEAD
 	/** method returns First name value */
-=======
 	/* method returns First name value */
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public String getFirstName(String userName){
 		if(database.get(userName)==null)
 			return null;
 		return database.get(userName).getFirstName();
 	}
 	
-<<<<<<< HEAD
 	/**method returns Last name value*/
-=======
 	/*method returns Last name value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public String getLastName(String userName){
 		if(database.get(userName)==null)
 			return null;
 		return database.get(userName).getLastName();
 	}
 	
-<<<<<<< HEAD
 	/**method returns Grade level value*/
-=======
 	/*method returns Grade level value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public int getGradeLevel(String userName){
 		if(database.get(userName)==null)
 			return -1;
 		return database.get(userName).getGradeLevel();
 	}
 	
-<<<<<<< HEAD
 	/**method returns test values*/
-=======
 	/*method returns test values*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public int getLastActiveTest(String userName){
 		if(database.get(userName)==null)
 			return -1;
@@ -145,56 +127,38 @@ public class UserDatabase implements Serializable{
 		return database.get(userName).getReportCard();
 	}
 	
-<<<<<<< HEAD
 	/**method sets password value*/
-=======
 	/*method sets password value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public void setPassword(String userName, String password){
 		database.get(userName).setPassword(password);
 	}
 	
-<<<<<<< HEAD
 	/** method sets First name value*/
-=======
 	/* method sets First name value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public void setFirstName(String userName, String firstName){
 		database.get(userName).setFirstName(firstName);
 	}
 	
-<<<<<<< HEAD
 	/**method sets Last name value*/
-=======
 	/*method sets Last name value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public void setLastName(String userName, String lastName){
 		database.get(userName).setLastName(lastName);
 	}
 	
-<<<<<<< HEAD
 	/**method sets Grade level value*/
-=======
 	/*method sets Grade level value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public void setGradeLevel(String userName, int gradeLevel){
 		database.get(userName).setGradeLevel(gradeLevel);
 	}
 	
-<<<<<<< HEAD
 	/**method sets last taken test value*/
-=======
 	/*method sets last taken test value*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public void setLastActiveTest(String userName, int lastActiveTest){
 		database.get(userName).setLastActiveTest(lastActiveTest);
 	}
 	
-<<<<<<< HEAD
 	/**method sets report card values*/
-=======
 	/*method sets report card values*/
->>>>>>> f3bcedc1c5856096afe1ae91d045d3e83f4ceab5
 	public void setReportCard(String userName, HashMap<ModuleSelectButtonInterface, ModuleReportSummary> reportCard){
 		database.get(userName).setReportCard(reportCard);
 	}
