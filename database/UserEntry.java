@@ -8,7 +8,7 @@
  *                 tests provided cover a subset of skills as specified by the Massachusetts Department of
  *                 Education's (DOE) website, found at:
  *                              http://www.doe.mass.edu/frameworks/math/2000/toc.html
- *                 The DOE category, ìNumber Sense and Operationsî for Grades Pre-K through Grade 4,
+ *                 The DOE category, ‚ÄúNumber Sense and Operations‚Äù for Grades Pre-K through Grade 4,
  *                 is the subset that the "Math Helper" software covers.
  *                 
  *               Features and services of the "Math Helper" software include, Login/Logout mechanics,
@@ -87,4 +87,4 @@ public class UserEntry implements Serializable{
 		this.reportCard = reportCard;
 	}
 	
-}
+ }
