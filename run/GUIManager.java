@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.2
- * Version Date: 04/20/2015
+ * Version:      0.11.3
+ * Version Date: 04/24/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -209,7 +209,7 @@ public final class GUIManager{
 	 * @param userName The String that is used as the database's key for the current user.
 	 */
 	public static void runGUI(String userName){
-		if(userName == null)
+		if(userName.equals(null))
 			runGUI();
 		else{
 			setUserName(userName);
@@ -355,12 +355,12 @@ public final class GUIManager{
 	 * @return A boolean indicating true if the specified user was successfully added to the database; false otherwise.
 	 */
 	public boolean addUser(String userName, String password, String firstName, String lastName, int gradeLevel){
-		if(userName == null || password == null || firstName == null || lastName == null)
+		if(userName.equals(null) || password.equals(null) || firstName.equals(null) || lastName.equals(null))
 			return false;
-		if(gradeLevel < 0 || gradeLevel < 2)
+		if(gradeLevel < 0 || gradeLevel > 2)
 			return false;
 		String pass = getPassword(userName);
-		if(pass == null)
+		if(pass.equals(null))
 			return false;
 		database.addUser(userName, password, firstName, lastName, gradeLevel);
 		return true;
