@@ -1,6 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Custom character encoding
+*.java encoding=cp1252
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 
