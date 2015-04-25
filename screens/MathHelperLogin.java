@@ -1,6 +1,6 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.3
+ * Version:      0.11.4
  * Version Date: 04/24/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
@@ -49,6 +49,12 @@ import javax.swing.JLayeredPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * 
+ * 
+ * @author Austin H Clark
+ *
+ */
 public class MathHelperLogin {
 	
 	private static GUIManager GUI;
@@ -126,15 +132,13 @@ public class MathHelperLogin {
 					String userName = textField.getText();
 					String password = passwordField.getText();
 					
-					validateUser(userName, password);
-					if(getIsValid()){
-						frame.dispose();
-						GUI.runGUI();
-					}
-					else{
-						JOptionPane.showMessageDialog(null, "Invalid User Name and/or Password");
-					}
+					System.out.println(userName);
+					System.out.println(password);
 					
+					if(validateUser(userName, password)){
+						frame.dispose();
+						GUI.runGUI(userName);
+					}
 				}
 				catch(Exception e){
 			
@@ -151,8 +155,8 @@ public class MathHelperLogin {
 		btnCreateUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{
-					CreateUser launch = new CreateUser();
-					launch.launchCreateUser();
+					CreateUser launch = new CreateUser(GUI);
+					launch.launchCreateUser(GUI);
 				}
 				catch(Exception exception){
 			
@@ -188,11 +192,28 @@ public class MathHelperLogin {
 	 * @param userName
 	 * @param Password
 	 */
-	private void validateUser(String userName, String Password){
-		isValid = true;
+	private boolean validateUser(String userName, String Password){
+		String checkPwd = GUI.getPassword(userName);
+		boolean checkNull = compare(Password, checkPwd);
+		
+		System.out.println(userName);
+		System.out.println(Password);
+		
+		if(checkNull == false){
+			JOptionPane.showMessageDialog(null, "Invalid User Name and/or Password");
+			return false;
+		}
+		
+		if(checkPwd.equals(Password)){
+			return true;
+		}
+		return false;
 	}
-	
-	public boolean getIsValid(){
-		return isValid;
+	boolean compare(String str1, String str2) {
+	    if(str1==null || str2==null) {
+	        //return false; if you assume null not equal to null
+	        return str1==str2;
+	    }
+	    return str1.equals(str2);
 	}
 }

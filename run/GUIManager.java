@@ -1,6 +1,6 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.3
+ * Version:      0.11.4
  * Version Date: 04/24/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
@@ -77,7 +77,9 @@ import project.tools.TextFileMaker;
  * NOTE: This implementation of gradeLevel (vs an enum) was requested by the Cool Math team.
  * TODO Currently, this class doubles as a test class. It must be cleaned up and re-factored before
  *  the software's production.
- * @author Kenneth Chin
+ * @author Kenneth Chin w/ colaborations from Austin H Clark
+ *  ({@link project.run.GUIManager#addUser(String, String, String, String, int) See addUser(String, String, String, String, int)}
+ *  &  {@link project.run.GUIManager#checkForNullValue(String, String) See checkForNullValue(String, String}).
  */
 public final class GUIManager{
 	
@@ -353,17 +355,39 @@ public final class GUIManager{
 	 * @param gradeLevel An int that describes the "Grade Level" that will be associated with the specified userName.
 	 *  The value of gradeLevel may be 0 (for PreK-K users), 1 (for Grade 1-2 users), or 2 (for Grade 3-4 users).
 	 * @return A boolean indicating true if the specified user was successfully added to the database; false otherwise.
+	 *
+	 * Author Austin H Clark
+	 *Changes Made by Austin H Clark.  No check on null values, that is executed prior to addUser Method call in CreateUser.java
 	 */
 	public boolean addUser(String userName, String password, String firstName, String lastName, int gradeLevel){
-		if(userName.equals(null) || password.equals(null) || firstName.equals(null) || lastName.equals(null))
-			return false;
 		if(gradeLevel < 0 || gradeLevel > 2)
 			return false;
-		String pass = getPassword(userName);
-		if(pass.equals(null))
-			return false;
-		database.addUser(userName, password, firstName, lastName, gradeLevel);
-		return true;
+		
+		String checkPwd = getPassword(userName);
+		
+		boolean checkNull = checkForNullValue(password, checkPwd);
+		
+		if(!checkNull){
+			database.addUser(userName, password, firstName, lastName, gradeLevel);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Author Austin H Clark
+	 * checkForNullValue checks that neither str1 or str2 are null.  If one is null return false
+	 * otherwise return true
+	 * @param str1
+	 * @param str2
+	 * @return
+	 */
+	boolean checkForNullValue(String str1, String str2) {
+	    if(str1==null || str2==null) {
+	        //return false; if you assume null not equal to null
+	        return str1==str2;
+	    }
+	    return true;
 	}
 	
 	/**

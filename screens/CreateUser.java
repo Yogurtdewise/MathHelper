@@ -1,6 +1,6 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.3
+ * Version:      0.11.4
  * Version Date: 04/24/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
@@ -24,14 +24,25 @@ import javax.swing.JFrame;
 
 import java.awt.Color;
 import java.awt.Font;
+
+import javax.swing.JOptionPane;
 import javax.swing.SpringLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 
+import project.run.GUIManager;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+/**
+ * 
+ * 
+ * @author Austin H Clark
+ *
+ */
 
 public class CreateUser {
 
@@ -49,15 +60,16 @@ public class CreateUser {
 	private JButton btnSubmit;
 	private JButton btnExit;
 	private JLabel lblonceYouCreate;
+	GUIManager GUI;
 
 	/**
 	 * Launch the application.
 	 */
-	public void launchCreateUser() {
+	public void launchCreateUser(final GUIManager GUI) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CreateUser window = new CreateUser();
+					CreateUser window = new CreateUser(GUI);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -69,7 +81,8 @@ public class CreateUser {
 	/**
 	 * Create the application.
 	 */
-	public CreateUser() {
+	public CreateUser(GUIManager GUI) {
+		this.GUI = GUI;
 		initialize();
 	}
 
@@ -164,23 +177,59 @@ public class CreateUser {
 		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
+			/**
+			 * Get information from text field.  Check that none are empty.  Pass info
+			 * to GUIManger to create user in database
+			 * 
+			 */
 			public void actionPerformed(ActionEvent e) {
 				try{
+					
+					String grade0 = "Pre K - K";
+					String grade1 = "Grades 1 - 2";
+					String grade2 = "Grades 3 - 4";
 					String userName = textField.getText();
 					String password = textField_1.getText();
 					String firstName = textField_2.getText();
 					String lastName = textField_3.getText();
-					String gradeLevel = (String) comboBox.getSelectedItem();
+					String gradeLevelString = (String) comboBox.getSelectedItem();
+					int gradeLevel = -1;
 					
-					submitUser(userName, password, firstName, lastName, gradeLevel);
+					if (gradeLevelString.equals(grade0)){
+						gradeLevel = 0;
+					}
+					if (gradeLevelString.equals(grade1)){
+						gradeLevel = 1;
+					}
+					if (gradeLevelString.equals(grade2)){
+						gradeLevel = 2;
+					}
 					
-					System.out.println(userName);
-					System.out.println(password);
-					System.out.println(firstName);
-					System.out.println(lastName);
-					System.out.println(gradeLevel);
+					if(textField.getText().isEmpty()){
+						JOptionPane.showMessageDialog(null, "Please Enter User Name");
+						return;
+					}
+					if(textField_1.getText().isEmpty()){
+						JOptionPane.showMessageDialog(null, "Please Enter Password");
+						return;
+					}
+					if(textField_2.getText().isEmpty()){
+						JOptionPane.showMessageDialog(null, "Please Enter First Name");
+						return;
+					}
+					if(textField_3.getText().isEmpty()){
+						JOptionPane.showMessageDialog(null, "Please Enter Last Name");
+						return;
+					}
 					
-					frame.dispose();
+					boolean userValid = GUI.addUser(userName, password, firstName, lastName, gradeLevel);
+				
+					if(userValid){
+						frame.dispose();
+					}
+					if(!userValid){
+						JOptionPane.showMessageDialog(null, "User Already Exists");
+					}
 				}
 				catch(Exception exception){
 			
@@ -212,6 +261,7 @@ public class CreateUser {
 		frame.setBounds(100, 100, 630, 449);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
 	/** submitUser method must be implemented once database is constructed
 	 * 
 	 * @param userName
