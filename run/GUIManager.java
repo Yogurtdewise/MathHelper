@@ -27,12 +27,15 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import javafx.embed.swing.JFXPanel;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,6 +53,7 @@ import project.buttons.PreKModuleSelectTutorialButtons;
 import project.constants.DifficultyLevel;
 import project.constants.Operator;
 import project.database.ModuleReportSummary;
+import project.database.PhonyDatabase;
 import project.database.ReportCard;
 import project.database.UserDatabase;
 import project.interfaces.ModuleSelectButtonInterface;
@@ -65,6 +69,7 @@ import project.tools.MainWindow;
 import project.tools.QuestionPanelSelect;
 import project.tools.QuestionPanelText;
 import project.tools.TextFileMaker;
+import project.tools.fxMediaPanel;
 
 /**
  * Manages the implementation of the project by acting as a intermediary between GUI elements and
@@ -122,6 +127,9 @@ public final class GUIManager{
 	private int width  = 1024; //The pixel width  of MainWindow's drawing area.
 	private int height = 768;  //The pixel height of MainWindow's drawing area.
 	
+	private int jfxPanelHeight = 394; //The pixel height of the JFX panel's drawing area.
+	private int jfxPanelWidth = 700; //The pixel width of the JFX panel's drawing area.
+	
 	private String defaultBackgroundPath = "\\images\\welcome\\Background.png"; //The default background image of the Main Window.
 	
 	//TODO Test data that should be removed or accessed differently once a database is implemented.
@@ -134,6 +142,9 @@ public final class GUIManager{
 	private UserDatabase database;
 	
 	private MainWindow mainWindow; //The root container of the Main Window.
+	private fxMediaPanel mediaPanel; //The container of the jfx media panel
+	
+	private static final int MEDIA_LAYER  = 1;
 	
 	/**
 	 * Used to catch any Throwable exceptions not caught by GUIManager's constructor's try/catch.
@@ -226,6 +237,7 @@ public final class GUIManager{
 		initStudent();
 		try{
 			buildMainWindow();
+			buildMediaPanel();
 			//buildPreKTestCounting();
 			//buildTextTestScreen();
 			//buildChooseOneTest();
@@ -329,8 +341,26 @@ public final class GUIManager{
 	 * Used to obtain the current user's username.
 	 * @return A String describing the current user's username.
 	 */
-	public String getUserName(){
+	 public String getUserName(){
 		return userName;
+	}
+	
+	/**
+	 * A helper method, used to build the primary window that is used as the program's root container.
+	 *  Also adds a window listener to mainWindow that listens for a window close event. If the window
+	 *  is closed, the database is written to a file.
+	 * @throws IOException {@link project.tools.ImageLoader See the ImageLoader class for details.}
+	 */
+	private void buildMainWindow() throws IOException{
+		BufferedImage background = ImageLoader.getBufferedImage(defaultBackgroundPath);
+		mainWindow = MainWindow.getInstance(this, width, height, background);
+		mainWindow.addWindowListener( new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				MainWindow frame = (MainWindow)e.getSource();
+				writeDatabase();
+				frame.setDefaultCloseOperation(MainWindow.EXIT_ON_CLOSE);
+			}
+		});
 	}
 	
 	/**
@@ -339,8 +369,21 @@ public final class GUIManager{
 	 * @param username A String describing the username who's password is to be obtained.
 	 * @return A String describing the password for the specified username.
 	 */
-	public String getPassword(String username){
+	 public String getPassword(String username){
 		return database.getPassword(username);
+	}
+	
+	/**
+	 * A helper method, used to build the primary media panel that is used as the program's container for videos.
+	 * @throws IOException {@link project.tools.ImageLoader See the ImageLoader class for details.}
+	 */
+	private void buildMediaPanel() throws IOException {
+		this.mediaPanel = new fxMediaPanel(this, this.jfxPanelWidth, this.jfxPanelHeight);
+		
+		//Add JFX Panel component to the Main Window
+		int padding = ((this.mainWindow.getPreferredSize().width - this.mediaPanel.getPanelWidth()) / 2);
+		this.mainWindow.addLayer(this.mediaPanel.getMediaPanel(), MEDIA_LAYER, padding, 125);
+		this.mediaPanel.getMediaPanel().setVisible(false);
 	}
 	
 	/**
@@ -359,7 +402,7 @@ public final class GUIManager{
 	 * Author Austin H Clark
 	 *Changes Made by Austin H Clark.  No check on null values, that is executed prior to addUser Method call in CreateUser.java
 	 */
-	public boolean addUser(String userName, String password, String firstName, String lastName, int gradeLevel){
+	 public boolean addUser(String userName, String password, String firstName, String lastName, int gradeLevel){
 		if(gradeLevel < 0 || gradeLevel > 2)
 			return false;
 		
@@ -374,6 +417,18 @@ public final class GUIManager{
 		return false;
 	}
 	
+	public MainWindow getMainWindow(){
+		return this.mainWindow;
+	}
+	
+	/**
+	 * Used to obtain the JFX Media Panel that is used as a container for all displayed videos/media.
+	 * @return The Media Panel that is used as a primary container for displayed videos.
+	 */
+	public fxMediaPanel getMediaPanel() {
+		return this.mediaPanel;
+	}
+	
 	/**
 	 * Author Austin H Clark
 	 * checkForNullValue checks that neither str1 or str2 are null.  If one is null return false
@@ -382,12 +437,20 @@ public final class GUIManager{
 	 * @param str2
 	 * @return
 	 */
-	boolean checkForNullValue(String str1, String str2) {
+	 boolean checkForNullValue(String str1, String str2) {
 	    if(str1==null || str2==null) {
 	        //return false; if you assume null not equal to null
 	        return str1==str2;
 	    }
 	    return true;
+	}
+	
+	/**
+	 * Used to obtain the current user's username.
+	 * @return A String describing the current user's username.
+	 */
+	public String getUserName(){
+		return userName;
 	}
 	
 	/**
@@ -595,11 +658,75 @@ public final class GUIManager{
 		}
 	}
 	
+	/**
+	 * Used to write the database object to disk.
+	 */
+	private void writeDatabase(){
+		try {
+			FileOutputStream fout = new FileOutputStream(DB_FILEPATH);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(database);
+			oos.close();
+		} catch (IOException e) {
+			handleException(e);
+		}
+	}
 	
-/*****************************
- * Exception Handling  (gm7) *
- *****************************/
+	/**
+	 * Used to retrieve the database object from a file.
+	 */
+	private void readDatabase(){
+		try {
+			FileInputStream fis = new FileInputStream(DB_FILEPATH);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			database = (PhonyDatabase)ois.readObject();
+			ois.close();
+			fis.close();
+		} catch (IOException | ClassNotFoundException e) {
+			handleException(e);
+		}
+	}
 	
+	/**
+	 * Used to check if the database file exists.
+	 * @return A boolean indicating true if the database file exists, false otherwise.
+	 */
+	private boolean dbExists(){
+		return new File(DB_FILEPATH).exists();
+	}
+	
+	
+	
+	//TODO TEST METHODS. All methods to be removed or re-written!
+	private void buildTextTestScreen() throws IOException{
+		QuestionPanelText panel = new QuestionPanelText(mainWindow, 10);
+		//panel.showQuestion("How big is this? <br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10", 1);
+		//panel.showAnswer("Correct!", false);
+		panel.showEquation("Answer this: ", 1, 5, 2, Operator.ADD);
+		panel.showEquationAnswer("7", "Incorrect!", false);
+	}
+	
+	private void buidRewardScreen() throws IOException{
+		int grade = 80;
+		new RewardScreen(this, "GUIManager_Test", grade, true, "Rewards\\");
+	}
+	
+	private void buildChooseOneTest() throws IOException{
+		String image1Path = "\\images\\test\\apples\\01AppleBoard.png";
+		String image2Path = "\\images\\test\\apples\\08AppleBoard.png";
+		QuestionPanelSelect panel = new QuestionPanelSelect(mainWindow, 10);
+		panel.showQuestion("This is a Test", 1, image1Path, image2Path);
+		panel.showAnswer("Some text goes here!", QuestionPanelSelect.Answer.LEFT, true);
+	}
+	
+	private void runModule() throws IOException{
+		QuestionPanelSelect module = new QuestionPanelSelect(mainWindow, 10);
+	}
+	
+	/*****************************
+	 * Exception Handling  (gm7) *
+	 *****************************/
+ 
 	//TODO Exception handling!
 	/**
 	 * Checks if the current environment supports transparent pixels.
