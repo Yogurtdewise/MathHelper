@@ -646,13 +646,25 @@ public final class GUIManager{
 		errorNumber++;
 		//TODO Should implement a shutdown hook.
 		
-		String message = "<p><CENTER>Sorry, there was a problem loading this screen.</CENTER></p>"
-				+ "<p><CENTER>You may try re-installing the \"image\" folder.</CENTER></p>"
-				+ "<p><CENTER>OR</CENTER></p>"
-				+ "<p><CENTER>Contact Cool Math at:<br>"
-				+ "      kchin@student.framingham.edu<br>"
-				+ "      Please send the \"ErrorLogs\" folder,<br>"
-				+ "      if you choose to contact us.</CENTER></p>";
+		String message = "";
+        if (e.getClass().getName() == "javafx.scene.media.MediaException") {
+            message = "<p><CENTER>Sorry, there was a problem loading the tutorial video.</CENTER></p>"
+                    + "<p><CENTER>You may try re-installing the \"media\" folder.</CENTER></p>"
+                    + "<p><CENTER>OR</CENTER></p>"
+                    + "<p><CENTER>Contact Cool Math at:<br>"
+                    + "      kchin@student.framingham.edu<br>"
+                    + "      Please send the \"ErrorLogs\" folder,<br>"
+                    + "      if you choose to contact us.</CENTER></p>";
+        }
+        else {
+            message = "<p><CENTER>Sorry, there was a problem loading this screen.</CENTER></p>"
+                    + "<p><CENTER>You may try re-installing the \"image\" folder.</CENTER></p>"
+                    + "<p><CENTER>OR</CENTER></p>"
+                    + "<p><CENTER>Contact Cool Math at:<br>"
+                    + "      kchin@student.framingham.edu<br>"
+                    + "      Please send the \"ErrorLogs\" folder,<br>"
+                    + "      if you choose to contact us.</CENTER></p>";
+        }
 		JLabel label = new JLabel("<HTML><div>" + message + "</div></HTML>", JLabel.CENTER);
 		JOptionPane.showMessageDialog(null, label, "Oops!", JOptionPane.INFORMATION_MESSAGE);
 		exit();
