@@ -21,6 +21,8 @@ package project.buttons;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import com.sun.media.jfxmedia.MediaException;
+
 import project.constants.DifficultyLevel;
 import project.interfaces.EnumerableButtonFactory;
 import project.interfaces.ModuleSelectButtonInterface;
@@ -117,6 +119,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
 					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
 				}
 			}
 		},
@@ -134,6 +138,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 				try {
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
 					manager.handleException(e);
 				}
 			}
@@ -153,6 +159,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
 					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
 				}
 			}
 		},
@@ -170,6 +178,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 				try {
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
 					manager.handleException(e);
 				}
 			}
@@ -189,6 +199,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
 					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
 				}
 			}
 		},
@@ -206,6 +218,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 				try {
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
 					manager.handleException(e);
 				}
 			}
@@ -225,6 +239,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
 					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
 				}
 			}
 		},
@@ -242,6 +258,8 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 				try {
 					tutorialScreen = new TutorialPlayerScreen(manager, this);
 				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
 					manager.handleException(e);
 				}
 			}

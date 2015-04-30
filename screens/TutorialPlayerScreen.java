@@ -28,6 +28,8 @@ import java.io.File;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import com.sun.media.jfxmedia.MediaException;
+
 import project.buttons.HomeButtonMaker;
 import project.interfaces.ClickableObserver;
 import project.interfaces.ModuleSelectButtonInterface;
@@ -37,7 +39,6 @@ import project.tools.ContentPane;
 import project.tools.FontMaker;
 import project.tools.ImageLoader;
 import project.tools.MainWindow;
-
 import javafx.embed.swing.JFXPanel;
 
 //import javafx.scene.text.Font;
@@ -64,6 +65,9 @@ import javafx.scene.media.MediaView;
  * @author Kenneth Chin, Christopher Moraal
  */
 public class TutorialPlayerScreen implements ClickableObserver{
+	
+	private java.lang.Runnable onEndOfMedia;
+	
 	//Layer constants for TutorialPlayerScreen components.
 		private static final int BUTTON_LAYER = 3;
 		private static final int TEXT_LAYER   = 2;
@@ -103,7 +107,7 @@ public class TutorialPlayerScreen implements ClickableObserver{
 	 *  difficulty level. (change this)
 	 * @throws IOException Thrown if any DifficultySelectScreen image file can not be read.
 	 */
-	public TutorialPlayerScreen(GUIManager manager, ModuleSelectButtonInterface observer) throws IOException{
+	public TutorialPlayerScreen(GUIManager manager, ModuleSelectButtonInterface observer) throws IOException, MediaException {
 		this.manager    = manager;
 		this.mainWindow = manager.getMainWindow();
 		this.observer   = observer;
@@ -115,11 +119,10 @@ public class TutorialPlayerScreen implements ClickableObserver{
 	 * Used to initialize TutorialPlayerScreen components.
 	 * @throws IOException Thrown if any DifficultySelectScreen image file can not be read.
 	 */
-	private void init() throws IOException{
+	private void init() throws IOException, MediaException{
 		initBackground();
 		initMediaPlayer();
 		initButtons();
-		//initText();
 	}
 	
 	/**
@@ -132,7 +135,11 @@ public class TutorialPlayerScreen implements ClickableObserver{
 		mainWindow.setBackgroundImage(image);
 	}
 	
-	private void initMediaPlayer() throws IOException {
+	/**
+	 * Used to make the GUI's media panel visible and add tutorial player to the media player
+	 * @throws IOException Thrown if the background image file can not be read.
+	 */
+	private void initMediaPlayer() throws IOException, MediaException {
 		this.mediaPanel.getMediaPanel().setVisible(true);
 		
 		//Initialize FX Panel
@@ -143,7 +150,11 @@ public class TutorialPlayerScreen implements ClickableObserver{
 		//String tutorialFilePath = new File("").getAbsolutePath() + DIRECTORY_PATH + "Tutorial.mp4";
 		String tutorialFilePath = new File("").getAbsolutePath() + MEDIA_PATH + this.observer.getName() +"Tutorial.mp4";
 		File mediaFile = new File(tutorialFilePath);
-		this.tutorialVideo = new Media(mediaFile.toURI().toString());
+		try {
+			this.tutorialVideo = new Media(mediaFile.toURI().toString());
+		} catch (MediaException e) {
+			manager.handleException(e);
+		}
 		
 		//Create the media player
 		this.VideoPlayer = new MediaPlayer(this.tutorialVideo);  //Error here
@@ -155,6 +166,22 @@ public class TutorialPlayerScreen implements ClickableObserver{
 		((Group)this.mediaScene.getRoot()).getChildren().add(this.mediaViewer);
 		
 		this.mediaPanel.getMediaPanel().setScene(this.mediaScene);
+
+		//Set End of Video event handler
+		this.VideoPlayer.setOnEndOfMedia(new Runnable() {
+			@Override public void run() {
+				System.out.println("End of video was reached!");
+				
+				//Remove replay button
+				mainWindow.removeLayer(pauseButton);
+				
+				//Add pause button
+				int totalButtonWidth = replayButton.getPreferredSize().width;
+				int padding = ((mainWindow.getPreferredSize().width - totalButtonWidth) / 2);
+				mainWindow.addLayer(replayButton, BUTTON_LAYER, padding, 550);
+			}
+	    });
+
 	}
 	
 	/**
@@ -228,26 +255,16 @@ public class TutorialPlayerScreen implements ClickableObserver{
 		//instructionText = null;
 		
 		//Stop the JFX Player and Remove
-		//this.mainWindow.removeLayer(this.mediaPanel.getMediaPanel());
 		this.mediaPanel.getMediaPanel().setVisible(false);
 		this.VideoPlayer.stop();
-		//this.VideoPlayer.dispose();
-		//this.fxPanel.removeAll();
-		//this.mediaRoot.getChildren().removeAll();
-		
-		//this.mediaRoot = null;
-		//this.mediaScene = null;
-		//this.mediaViewer = null;
-		//this.tutorialVideo  = null;
-		//this.VideoPlayer = null;
-		//this.fxPanel = null;
 	}
 	
 	@Override
 	public void clicked(JComponent component) {
 		if(component == playButton) {
-			System.out.println("I am play button");
-			//Pause video
+			System.out.println("Play was clicked!");
+			
+			//Play the video
 			this.VideoPlayer.play();
 			
 			//Remove play button
@@ -259,7 +276,7 @@ public class TutorialPlayerScreen implements ClickableObserver{
 			mainWindow.addLayer(pauseButton, BUTTON_LAYER, padding, 550);
 		}
 		else if(component == pauseButton) {
-			System.out.println("I am pause button");
+			System.out.println("Pause was clicked!");
 			
 			//Pause video
 			this.VideoPlayer.pause();
@@ -273,7 +290,10 @@ public class TutorialPlayerScreen implements ClickableObserver{
 			mainWindow.addLayer(playButton, BUTTON_LAYER, padding, 550);
 		}
 		else if(component == replayButton) {
-			System.out.println("I am replay button");
+			System.out.println("Replay was clicked!");
+			
+			//Reset Time
+			this.VideoPlayer.seek(this.VideoPlayer.getStartTime());
 			
 			//Replay video
 			this.VideoPlayer.play();
@@ -287,7 +307,6 @@ public class TutorialPlayerScreen implements ClickableObserver{
 			mainWindow.addLayer(pauseButton, BUTTON_LAYER, padding, 550);
 			
 		}
-		//Listener?
 		else if(component == homeButton){
 			tearDown();
 			
