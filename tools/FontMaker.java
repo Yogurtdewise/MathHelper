@@ -163,7 +163,7 @@ public final class FontMaker{
 		
 		/**
 		 * The private constructor for FontTypes.
-		 * @param identifier An int > 0, and equal to one of the FontMaker constants.
+		 * @param identifier An int greater than 0, and equal to one of the FontMaker constants.
 		 * @param path This font's file path from the program's root directory.
 		 */
 		private FontTypes(int identifier, String path){

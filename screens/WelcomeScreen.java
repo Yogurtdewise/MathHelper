@@ -36,7 +36,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * This class is used to display a Welcome Screen in a MainWindow. A WelcomeScreen
- *  has a welcome message in the top-left of of the MainWindow & includes the specified
+ *  has a welcome message in the top-left of of the MainWindow and includes the specified
  *  student's name. Additionally, a WelcomeScreen has four option buttons; Tutorial,
  *  Practice, Test, and Report Card. Clicking the first 3 option buttons opens the
  *  appropriate ModuleSelectScreen. Clicking the last option button, opens the
@@ -60,7 +60,7 @@ public class WelcomeScreen implements ClickableObserver{
 	/**
 	 * The constructor for WelcomeScreen. Populates the specified MainWindow with four
 	 *  option buttons, a "Logout" button, and a welcome message.
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @param studentName A String describing a student's name, that will be displayed in
 	 *  the welcome message.
 	 * @throws IOException Thrown if a image or font file can not be read.
@@ -129,7 +129,6 @@ public class WelcomeScreen implements ClickableObserver{
 	/**
 	 * Used to create and display a welcome message in mainWindow.
 	 * @throws IOException Thrown if the ARIAL font file can not be read.
-	 * @throws FontFormatException Thrown if the ARIAL font can not be read.
 	 */
 	private void addWelcomeText() throws IOException{
 		welcomeText = new JLabel("<HTML><i>" + welcomeMsg + "</i><HTML>");

@@ -37,7 +37,7 @@ public enum SequenceBoard {
 	/**
 	 * The private constructor for the SequenceBoard enum.
 	 * @param filePath This AppleBoard's file path from the program's root directory.
-	 * @param value This AppleBoard's integer value.
+	 * @param name The String name of this SequenceBoard.
 	 */
 	private SequenceBoard(String filePath, String name){
 		this.filePath = filePath;

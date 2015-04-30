@@ -29,7 +29,7 @@ import project.interfaces.ModuleSelectButtonInterface;
 /**
  * This class is a convenience class used to obtain read, alter, or initialize a HashMap that
  *  may be used to track a user's grades. More specifically, it is used to "bridge the gap"
- *  between the program's database & its implementation.
+ *  between the program's database and its implementation.
  * The public methods of this class can be used to get an initialized HashMap for a specified
  *  grade level, or get/set a particular test's grades.
  * @author Kenneth Chin
@@ -102,7 +102,7 @@ public final class ReportCard {
 	 * @param difficulty A DifficultyLevel object that describes the test's difficulty level who's grade
 	 *  is to be set.
 	 * @return A HashMap<ModuleSelectButtonInterface, ModuleReportSummary> who's ModuleReportSummary for
-	 *  the specified "test" & "difficulty" has been modified to reflect "grade" and "maxGrade".
+	 *  the specified "test" and "difficulty" has been modified to reflect "grade" and "maxGrade".
 	 */
 	public static HashMap<ModuleSelectButtonInterface, ModuleReportSummary> setGrade
 				(HashMap<ModuleSelectButtonInterface, ModuleReportSummary> reportMap,
@@ -123,14 +123,14 @@ public final class ReportCard {
 	}
 	
 	/**
-	 * Used to obtain the grade for the specified test & difficulty level.
+	 * Used to obtain the grade for the specified test and difficulty level.
 	 * @param reportMap A HashMap<ModuleSelectButtonInterface, ModuleReportSummary> who's
 	 *  ModuleSelectButtonInterface key values describe a test, and who's ModuleReportSummary value
 	 *  properties describe the grades for each key.
 	 * @param test A ModuleSelectButtonInterface that describes the test who's grades are to be retrieved.
 	 * @param difficulty A DifficultyLevel object that describes the test's difficulty level who's grade
 	 *  is to be retrieved.
-	 * @return An int indicating the grade for the specified "test" & "difficulty".
+	 * @return An int indicating the grade for the specified "test" and "difficulty".
 	 */
 	public static int getGrade(HashMap<ModuleSelectButtonInterface, ModuleReportSummary> reportMap,
 			ModuleSelectButtonInterface test, DifficultyLevel difficulty){

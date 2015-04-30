@@ -133,7 +133,7 @@ public class PreKModuleSelect extends ModuleSelectScreen implements ClickableObs
 	}
 	
 	/**
-	 * Used to determine which pagination buttons should be displayed & displays them.
+	 * Used to determine which pagination buttons should be displayed and displays them.
 	 */
 	private void updatePageControls(){
 		//Check the left arrow.

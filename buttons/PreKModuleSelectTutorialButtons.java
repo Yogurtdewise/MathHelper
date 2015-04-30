@@ -37,7 +37,7 @@ import project.tools.ImageLoader;
  *  Each button executes the appropriate Tutorial module. Each button implements
  *  ModuleSelectButtonInterface. A title describing the collection of buttons may be obtained via
  *  the getTitleText() method.
- * @author Kenneth Chin & Christopher Moraal
+ * @author Kenneth Chin and Christopher Moraal
  */
 public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 	

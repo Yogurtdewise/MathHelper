@@ -97,7 +97,7 @@ public class PreKTestFractions implements TestableObserver, Questionable{
 	
 	/**
 	 * The PreKTestFractions constructor. Creates and displays a Fractions test for PreK-K students.
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 * @throws IOException Thrown if any image file is missing.
@@ -516,7 +516,7 @@ public class PreKTestFractions implements TestableObserver, Questionable{
 	}
 	
 	/**
-	 * This enum is used to associate & store image file names & image names to a constant.
+	 * This enum is used to associate and store image file names and image names to a constant.
 	 * @author Kenneth Chin
 	 */
 	private enum Images{

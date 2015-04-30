@@ -142,7 +142,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 			}
 		},
 		/**
-		 * The Odd & Even Grade1-2 Tutorial module button.
+		 * The Odd and Even Grade1-2 Tutorial module button.
 		 */
 		ODD_EVEN  ("Odd & Even", "5_odd&even.png" , 300, 200) {
 			@Override

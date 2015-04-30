@@ -19,7 +19,7 @@
 package project.constants;
 
 /**
- * An enum used to define DifficultyLevel constants & file names.
+ * An enum used to define DifficultyLevel constants and file names.
  * @author Kenneth Chin
  */
 public enum DifficultyLevel{
@@ -43,8 +43,8 @@ public enum DifficultyLevel{
 	
 	/**
 	 * The private constructor for DifficultyLevel.
-	 * @param name
-	 * @param filename
+	 * @param name The String name of this DifficultyLevel
+	 * @param filename The String file name for this Difficulty Level's button image file.
 	 */
 	private DifficultyLevel(String name, String filename){
 		this.name     = name;

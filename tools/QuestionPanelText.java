@@ -125,6 +125,7 @@ public class QuestionPanelText implements Testable, ClickableObserver{
 	 * Creates and displays a QuestionPanelText with no question displayed. Use showQuestion(String) or
 	 * showEquation(String, int, int, Operator) to display a question.
 	 * @param mainWindow The MainWindow that is to have QuestionPanelText components added to.
+	 * @param maxNumQuestions An int indicating the maximum number of questions that will be asked of the user.
 	 * @throws IOException Thrown if any image file can not be read or is missing.
 	 */
 	public QuestionPanelText(MainWindow mainWindow, int maxNumQuestions) throws IOException{
@@ -369,9 +370,9 @@ public class QuestionPanelText implements Testable, ClickableObserver{
 	 * Used to show a short answer and icon along the bottom-left of the question box. Also displays
 	 *  the "Next" button and hides the "Submit" button.This method is meant to be used with
 	 *  questions that were displayed using showQuesion(String,int).
-	 * If isCorrect == true, then a green "check" icon will be displayed to the left of "answer" &
+	 * If isCorrect == true, then a green "check" icon will be displayed to the left of "answer" and
 	 *  the text indicated by "answer" will be colored green. If isCorrect == false, a red "X" icon
-	 *  will appear to the left of "answer" & the text indicated by "answer" will be colored red. 
+	 *  will appear to the left of "answer" and the text indicated by "answer" will be colored red. 
 	 * NOTE: removeAnswer() is called automatically when a new question is displayed.
 	 * @param answer A String indicating the text to be displayed as an answer dialog. This text
 	 *  should be short, as it is displayed on the bottom of the question box.
@@ -391,7 +392,7 @@ public class QuestionPanelText implements Testable, ClickableObserver{
 	 *  showEquation(String, int, int, int, Operator).
 	 * If isCorrect == true, then a green "check" icon will be displayed & the text indicated by
 	 *  "answer" will be colored green. If isCorrect == false, a red "X" icon will be displayed
-	 *  & the text indicated by "answer" will be colored red. 
+	 *  and the text indicated by "answer" will be colored red. 
 	 * NOTE: removeAnswer() is called automatically when a new question is displayed.
 	 * @param answer A String indicating the numeric answer to be displayed beneath the question's
 	 *  vertical equation.
@@ -489,7 +490,7 @@ public class QuestionPanelText implements Testable, ClickableObserver{
 	}
 	
 	/**
-	 * Used to set answerIcon & display the correct/incorrect icon in the bottom-left of questionBox.
+	 * Used to set answerIcon and display the correct/incorrect icon in the bottom-left of questionBox.
 	 * @param correct A boolean indicating true if the question was answered correctly; false otherwise.
 	 * @throws IOException Thrown if the icon's image can not be read.
 	 */

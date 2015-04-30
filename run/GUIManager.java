@@ -72,12 +72,12 @@ import project.tools.fxMediaPanel;
  *  the software's production.</p>
  * @author Kenneth Chin w/ collaborations from , Austin H Clark (
  *  	   {@link project.run.GUIManager#addUser(String, String, String, String, int) 
- *  	   See addUser(String, String, String, String, int)} & 
+ *  	   See addUser(String, String, String, String, int)} and 
  *         {@link project.run.GUIManager#checkForNullValue(String, String) 
  *         See checkForNullValue(String, String)}),
  *  	   and Christopher Moraal
  *  	   ({@link project.run.GUIManager#buildMediaPanel() 
- *         See buildMediaPanel()} & 
+ *         See buildMediaPanel()} and 
  *  	   {@link project.run.GUIManager#getMediaPanel() 
  *  	   See getMediaPanel()})
  */
@@ -193,7 +193,7 @@ public final class GUIManager{
 	}
 	
 	/**
-	 * Starts the Swing Event Dispatch Thread & executes the main program (Starting at the Welcome Screen).
+	 * Starts the Swing Event Dispatch Thread and executes the main program (Starting at the Welcome Screen).
 	 * GUIManager will open a single JFrame and manage all GUI components on the JFrame. If the JFrame
 	 *  is closed, the thread will receive a System.exit(0) call.
 	 */
@@ -208,7 +208,7 @@ public final class GUIManager{
 	/**
 	 * Opens the Welcome Screen using the specified user's data. The user's data is obtained from
 	 *  the database's key value that matches the specified username. If the username does not exist
-	 *  in the database, the default user is loaded & used to display a Welcome Screen.
+	 *  in the database, the default user is loaded and used to display a Welcome Screen.
 	 * @param userName The String that is used as the database's key for the current user.
 	 */
 	public static void runGUI(String userName){
@@ -221,7 +221,7 @@ public final class GUIManager{
 	}
 	
 	/**
-	 * Used to initialize the current user's data & open a WelcomeScreen that is appropriate for the user.
+	 * Used to initialize the current user's data and open a WelcomeScreen that is appropriate for the user.
 	 */
 	private void start(){
 		initStudent();

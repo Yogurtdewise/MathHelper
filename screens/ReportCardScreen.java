@@ -270,8 +270,8 @@ public class ReportCardScreen implements ClickableObserver{
 	/**
 	 * A helper method used to convert reportMap data into Strings for use in the student's grade table.
 	 * Returns a String array of length == 3. Each index has a String with a format of "grade / maxGrade".
-	 * If a student's grade is < 0, then the grade is replaced with "-". Index 0 corresponds to the "Easy"
-	 * difficulty level. Index 1 corresponds to the "Normal" difficulty level, and index 2; the "Hard"
+	 * If a student's grade is less than 0, then the grade is replaced with "-". Index 0 corresponds to the
+	 * "Easy" difficulty level. Index 1 corresponds to the "Normal" difficulty level, and index 2; the "Hard"
 	 * difficulty level.
 	 * @param button The ModuleSelectButtonInterface that describes the Test Module who's grades are to be
 	 *  returned in array-form.

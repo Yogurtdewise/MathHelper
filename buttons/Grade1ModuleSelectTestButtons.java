@@ -187,7 +187,7 @@ public class Grade1ModuleSelectTestButtons implements EnumerableButtonFactory{
 			}
 		},
 		/**
-		 * The Odd & Even Grade1-2 Test module button.
+		 * The Odd and Even Grade1-2 Test module button.
 		 */
 		ODD_EVEN  ("Odd & Even", "5_odd&even.png" , 300, 200) {
 			@Override

@@ -108,6 +108,7 @@ public class QuestionPanelSelect implements Testable, ClickableObserver{
 	 * The QuestionPanelSelect constructor. Creates and displays a QuestionPanelSelect with no question or
 	 *  answer panels. Use showQuestion() to display a question and two answer panels.
 	 * @param mainWindow The MainWindow which is to have QuestionPanelSelect components added to.
+	 * @param maxNumQuestions An int indicating the maximum number of questions that will be asked of the user.
 	 * @throws IOException Thrown if any image file is missing.
 	 */
 	public QuestionPanelSelect(MainWindow mainWindow, int maxNumQuestions) throws IOException{
@@ -390,9 +391,9 @@ public class QuestionPanelSelect implements Testable, ClickableObserver{
 	 * Used to show a short answer and icon along the bottom-left of the question box. Also draws a
 	 *  red "X" through the panel that is incorrect. Lastly, changes the "Submit" button into a
 	 *  "Next" button.
-	 * If isCorrect == true, then a green "check" icon will be displayed to the left of "answer" &
+	 * If isCorrect == true, then a green "check" icon will be displayed to the left of "answer" and
 	 *  the text indicated by "answer" will be colored green. If isCorrect == false, a red "X" icon
-	 *  will appear to the left of "answer" & the text indicated by "answer" will be colored red. 
+	 *  will appear to the left of "answer" and the text indicated by "answer" will be colored red. 
 	 * NOTE: removeAnswer() is called automatically when a new question is displayed.
 	 * @param answer A String indicating the text to be displayed as an answer dialog. This text
 	 *  should be short, as it is displayed on the bottom of the question box.
@@ -660,7 +661,8 @@ public class QuestionPanelSelect implements Testable, ClickableObserver{
 		
 		/**
 		 * The private constructor for the Answer enum.
-		 * @param value
+		 * @param value The String "value" for this Answer. Indicates "left", "right", or
+		 *  "none" as the chosen answer panel.
 		 */
 		private Answer(String value){
 			this.value = value;

@@ -99,7 +99,7 @@ public class PreKTestComparison implements TestableObserver, Questionable{
 	
 	/**
 	 * The PreKTestComparison constructor. Creates and displays a Compare test for PreK-K students.
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 * @throws IOException Thrown if any image file is missing.
@@ -174,7 +174,7 @@ public class PreKTestComparison implements TestableObserver, Questionable{
 	}
 	
 	/**
-	 * Used to obtain an unused combination of panel quantities & question values.
+	 * Used to obtain an unused combination of panel quantities and question values.
 	 */
 	private void getValues(){
 		boolean isValuesSet = false;
@@ -462,9 +462,9 @@ public class PreKTestComparison implements TestableObserver, Questionable{
 	
 	/**
 	 * This enum is used as the implementation of the state pattern for PreKTestComparison.
-	 * This enum is used to differentiate question types & their functions. Each question type
-	 *  has its own question format, set of valid values for comparisonPoint, correctAnswer, & wrongAnswer,
-	 *  and entry format for the "wrong answer file".
+	 * This enum is used to differentiate question types and their functions. Each question type
+	 *  has its own question format, set of valid values for comparisonPoint, correctAnswer, and
+	 *  wrongAnswer, and entry format for the "wrong answer file".
 	 * The fourth value in isNumberSetUsed[][][][fourth value] is directly related to each Comparison.ordinal.
 	 * @author Kenneth Chin
 	 */
@@ -820,14 +820,14 @@ public class PreKTestComparison implements TestableObserver, Questionable{
 		protected abstract void initUsedArray();
 		
 		/**
-		 * Used to set comparisonPoint, correctAnswer, & wrongAnswer to an unused set of values that
+		 * Used to set comparisonPoint, correctAnswer, and wrongAnswer to an unused set of values that
 		 *  may be used to ask a question.
 		 * NOTE: Since all but Comparison.NONE have over 100 possible questions it is assumed
 		 *  that there will always be an unused question available. However, in Comparison.NONE's case
 		 *  there are only 11 possible questions. Therefore the availability of questions in
 		 *  Comparison.NONE is not assumed.
 		 * @return A boolean that is assumed true. If true is returned, then it is assumed that
-		 *  comparisonPoint, correctAnswer, & wrongAnswer have been set. Otherwise, the values have
+		 *  comparisonPoint, correctAnswer, and wrongAnswer have been set. Otherwise, the values have
 		 *  not been set (because all available questions have been used).
 		 */
 		protected abstract boolean getValues();

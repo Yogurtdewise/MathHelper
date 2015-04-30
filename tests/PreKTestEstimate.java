@@ -89,7 +89,7 @@ public class PreKTestEstimate implements TestableObserver, Questionable{
 	
 	/**
 	 * The PreKTestEstimate constructor. Creates and displays an Estimate test for PreK-K students.
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 * @throws IOException Thrown if any image file is missing.

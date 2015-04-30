@@ -61,7 +61,7 @@ public class PreKTestFinal implements QuestionableObserver{
 	 * This class is used to test PreK-K students on a random sampling of skills taught and tested
 	 *  by the system. It is a "Cumulative" or "Final" exam, but no guarantees are made that an
 	 *  even distribution of skills will be tested.
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 */
@@ -118,7 +118,7 @@ public class PreKTestFinal implements QuestionableObserver{
 	}
 	
 	/**
-	 * Used to choose a psudo-random PreK-K test & have it display a question.
+	 * Used to choose a psudo-random PreK-K test and have it display a question.
 	 */
 	private void askQuestion(){
 		currentTestIndex  = getRandomInt(0, (Question.values().length - 1));
@@ -134,6 +134,8 @@ public class PreKTestFinal implements QuestionableObserver{
 	/**
 	 * A helper method, used to create a String that describes an incorrectly answered question.
 	 *  Adds the created String to the wrongAnswers ArrayList.
+	 * @param wrongAnswerLogEntry A String describing the question, the user's answer, and the correct
+	 *  answer for a question the user got incorrect.
 	 */
 	private void logWrongAnswer(String wrongAnswerLogEntry){
 		wrongAnswers.add(wrongAnswerLogEntry);
@@ -357,7 +359,7 @@ public class PreKTestFinal implements QuestionableObserver{
 		/**
 		 * Used to create an instance of this test. This method must be called once before this test's
 		 *  methods may be used.
-		 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+		 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 		 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 		 * @param difficulty The DifficultyLevel of this test.
 		 * @param maxQuestions An int indicating the maximum number of questions that PreKTestFinal will

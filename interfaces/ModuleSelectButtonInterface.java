@@ -72,6 +72,7 @@ public interface ModuleSelectButtonInterface {
 	 * Used to invoke whatever action that is associated with this button.
 	 * This method is often called by a ClickableObserver's clicked(JComponent)
 	 *  method.
+	 * @param screen The ModuleSelectScreen that wants this ModuleSelectButtonInterface to do something.
 	 */
 	public abstract void doAction(ModuleSelectScreen screen);
 	

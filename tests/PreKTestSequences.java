@@ -70,7 +70,7 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	
 	/**
 	 * The PreKTestSequences constructor. Creates and displays a Sequences test for PreK-K students.
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 * @throws IOException Thrown if any image file is missing.

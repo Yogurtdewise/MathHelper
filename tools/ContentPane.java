@@ -210,7 +210,7 @@ public class ContentPane extends JPanel implements Clickable{
 	 * Used to change this JPanel's background image. This function forces this JPanel to repaint().
 	 * WARNING: Changing the background's image will change this JPanel's dimensions to be
 	 *  equal to the that of the new image's dimensions.
-	 * @param backgroundImage
+	 * @param backgroundImage The BufferedImage that is to be used as this ContentPane's new background image.
 	 */
 	public void changeBackground(BufferedImage backgroundImage){
 		background = backgroundImage;

@@ -48,7 +48,7 @@ import project.tools.MainWindow;
  *  a screen-capture is performed. The image is then saved as the format specified by IMAGE_FILE_TYPE.
  *  The image is written the name and directory as specified by the constructor at instantiation.
  *  Once the image has been written to the user's storage drive, the "Home" button is placed onto
- *  the screen. If clicked, the "Home" button will tear down the RewardScreen & create a WelcomeScreen.
+ *  the screen. If clicked, the "Home" button will tear down the RewardScreen and create a WelcomeScreen.
  *  Also enables the next available test, if the student's grade is passing. Lastly, forces the database
  *  to write to file. 
  * @author Kenneth Chin
@@ -93,9 +93,9 @@ public class RewardScreen implements ClickableObserver{
 	 *  "Home" button. The image is stored into the specified directory, with a name specified by
 	 *  testName. Also enables the next available test, if the student's grade is passing. Lastly,
 	 *  forces the database to write to file. 
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @param test The ModuleSelectButtonInterface that represents the test that was taken.
-	 *  Used for image file name & to determine if the next test should be available.
+	 *  Used for image file name and to determine if the next test should be available.
 	 * @param difficulty The DifficultyLevel that describes the test's difficulty.
 	 * @param grade An int indicating the percentage of correct answers that a student received on
 	 *  the specified Test module.
@@ -117,9 +117,10 @@ public class RewardScreen implements ClickableObserver{
 	}
 	
 	/**
-	 * Used to initialize the RewardScreen's display & obtain a screen capture before adding a "Home" button.
-	 *  Also enables the next test if the student's grade is >= PASSING_GRADE. Lastly, forces the database
-	 *  to be written to file.
+	 * Used to initialize the RewardScreen's display and obtain a screen capture before adding a "Home" button.
+	 *  Also enables the next test if the student's grade is greater than or equal to PASSING_GRADE. Lastly,
+	 *  forces the database to be written to file.
+	 * @throws IOException Thrown if any image file can not be read, or the "Screen Shot" can not be written.
 	 */
 	private void init() throws IOException{
 		initRewards();

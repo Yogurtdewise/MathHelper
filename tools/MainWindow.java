@@ -177,7 +177,8 @@ public final class MainWindow extends JFrame{
 	 *  many components being displayed. If possible, do not use .reDraw(). Instead, wait for the
 	 *  Event Dispatch Thread to update the JPanel automatically.
 	 * NOTE: Changing the background image WILL NOT change the window size.
-	 * @param backgroundImage
+	 * @param backgroundImage The BufferedImage that is to be used as the MainWindow's new
+	 *  background image.
 	 */
 	public void setBackgroundImage(BufferedImage backgroundImage){
 		currentBackgroundImage = backgroundImage;

@@ -64,7 +64,7 @@ public abstract class ModuleSelectScreen{
 	
 	/**
 	 * Constructs an abstract ModuleSelectScreen, and changes the MainWindow's background image.
-	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
+	 * @param manager The GUIManager that manages the primary MainWindow and all GUI screens.
 	 * @throws IOException Thrown if the file described by backgroundImagePath can not be read.
 	 */
 	public ModuleSelectScreen(GUIManager manager) throws IOException{
