@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      0.11..4
+ * Version Date: 04/11/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -218,6 +218,17 @@ public final class MainWindow extends JFrame{
 		contentPane.add(component, depth);
 		component.setOpaque(false);
 		component.setVisible(true);
+		contentPane.revalidate();
+		contentPane.repaint();
+	}
+	
+	/**
+	 * Used to remove a JComponent from the content pane. Resets the window to previous state.
+	 * @param component A JComponent to remove from the specified layer. It is recommeded that the JComponent 
+	 * is a JPanel, but may be a any sub-class of JComponent.
+	 */
+	public void removeLayer(JComponent component) {
+		contentPane.remove(component);
 		contentPane.revalidate();
 		contentPane.repaint();
 	}

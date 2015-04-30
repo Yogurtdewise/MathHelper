@@ -21,9 +21,13 @@ package project.buttons;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import com.sun.media.jfxmedia.MediaException;
+
 import project.constants.DifficultyLevel;
 import project.interfaces.EnumerableButtonFactory;
 import project.interfaces.ModuleSelectButtonInterface;
+import project.run.GUIManager;
+import project.screens.TutorialPlayerScreen;
 import project.screens.ModuleSelectScreen;
 import project.tools.ContentPane;
 import project.tools.ImageLoader;
@@ -97,80 +101,167 @@ public class PreKModuleSelectTutorialButtons implements EnumerableButtonFactory{
 	 * This enum describes the individual buttons of PreKModuleSelectTutorialButtons. Each button
 	 *  implements ModuleSelectButtonInterface, and is used to execute a specified Tutorial module
 	 *  for PreK-K students.
-	 * @author Kenneth Chin
+	 * @author Kenneth Chin, Christopher Moraal
 	 */
 	public enum Button implements ModuleSelectButtonInterface{
-
 		/**
 		 * The Counting Prek-K Tutorial module button.
 		 */
 		COUNTING   ("Counting",  "1_counting.png"  , 300, 225) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 *  The Matching Prek-K Tutorial module button.
 		 */
 		MATCHING   ("Matching",  "2_matching.png"  , 590, 225) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Sequences Prek-K Tutorial module button.
 		 */
 		SEQUENCES  ("Sequences", "3_sequences.png" , 303, 400) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Comparison Prek-K Tutorial module button.
 		 */
 		COMPARISON ("Comparison","4_comparison.png", 593, 400) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Fractions Prek-K Tutorial module button.
 		 */
 		FRACTIONS  ("Fractions", "5_fractions.png" , 300, 225) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Coins Prek-K Tutorial module button.
 		 */
 		COINS      ("Coins",     "6_coins.png"     , 590, 225) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Arithmetic Prek-K Tutorial module button.
 		 */
 		ARITHMETIC ("Arithmetic","7_arithmetic.png", 300, 400) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Estimate Prek-K Tutorial module button.
 		 */
 		ESTIMATE   ("Estimate",  "8_estimate.png"  , 590, 400) {
+			private GUIManager manager;
+			private TutorialPlayerScreen tutorialScreen;
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
 				System.out.println("Opening the " + getName() + " Tutorial!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					tutorialScreen = new TutorialPlayerScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				} catch (MediaException e) {
+					manager.handleException(e);
+				}
 			}
 		};
 	
