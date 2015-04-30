@@ -626,8 +626,6 @@ public final class GUIManager{
 	 * @param e The Throwable clause that was thrown.
 	 */
 	public void handleException(Throwable e){
-		//TODO e.printStackTrace() should be removed after proper execution is developed.
-		e.printStackTrace();
 		String errorMessage;
 		String localMessage;
 		if(e.getMessage() == null)

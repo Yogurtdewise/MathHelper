@@ -72,7 +72,7 @@ public class CreateUser {
 					CreateUser window = new CreateUser(GUI);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					GUI.handleException(e);;
 				}
 			}
 		});
