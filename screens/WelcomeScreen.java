@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -52,7 +52,7 @@ public class WelcomeScreen implements ClickableObserver{
 	private String welcomeMsg   = "Welcome, "; //The text that will be displayed as a welcome message.
 	private JLabel welcomeText; //The JLabel that will display welcomeMsg.
 	
-	private ContentPane logoutButton;
+	private ContentPane exitButton;
 	
 	private GUIManager manager;    //The GUIManager that manages mainWindow & all GUI screens.
 	private MainWindow mainWindow; //The MainWindow that this WelcomeScreen will add components to.
@@ -85,14 +85,6 @@ public class WelcomeScreen implements ClickableObserver{
 	}
 	
 	/**
-	 * Used to obtain the MainWindow that WelcomeScreen components are added to.
-	 * @return The MainWindow that WelcomeScreen components are added to.
-	 */
-	private MainWindow getMainWindow(){
-		return mainWindow;
-	}
-	
-	/**
 	 * Used to set mainWindow's background image to its default.
 	 */
 	private void setBackground(){
@@ -107,17 +99,17 @@ public class WelcomeScreen implements ClickableObserver{
 		for(Button button:Button.values()){
 			button.setButton(makeButton(button.getPath(), button.getName()));
 		}
-		initLogoutButton();
+		initExitButton();
 	}
 	
 	/**
-	 * TODO Change this implementation to use a Logout icon.
-	 * @throws IOException Thrown if the logout button's image file can not be read.
+	 * Used to create the "Exit" button.
+	 * @throws IOException Thrown if the exit button's image file can not be read.
 	 */
-	private void initLogoutButton() throws IOException{
+	private void initExitButton() throws IOException{
 		String filePath = "\\images\\global\\ExitBtn.png";
 		String name     = "Exit";
-		logoutButton = makeButton(filePath, name);
+		exitButton      = makeButton(filePath, name);
 	}
 	
 	/**
@@ -158,7 +150,7 @@ public class WelcomeScreen implements ClickableObserver{
 			mainWindow.addLayer(button.getButton(), BUTTON_LAYER, button.getX(), button.getY());
 		}
 		registerButtons();
-		mainWindow.addLayer(logoutButton, BUTTON_LAYER, 20, 640);
+		mainWindow.addLayer(exitButton, BUTTON_LAYER, 20, 640);
 	}
 	
 	/**
@@ -168,7 +160,7 @@ public class WelcomeScreen implements ClickableObserver{
 		for(Button button:Button.values()){
 			button.getButton().registerObserver(this);
 		}
-		logoutButton.registerObserver(this);
+		exitButton.registerObserver(this);
 	}
 	
 	/**
@@ -316,7 +308,7 @@ public class WelcomeScreen implements ClickableObserver{
 	 */
 	public void tearDown(){
 		mainWindow.getContainer().remove(welcomeText);
-		mainWindow.getContainer().remove(logoutButton);
+		mainWindow.getContainer().remove(exitButton);
 		for(Button button:Button.values()){
 			ContentPane thisButton= button.getButton();
 			thisButton.removeObserver(this);
@@ -326,9 +318,7 @@ public class WelcomeScreen implements ClickableObserver{
 	
 	@Override
 	public void clicked(JComponent component) {
-		System.out.println(component.getName() + " was clicked!");
-		//TODO Change this implementation to open a LoginScreen.
-		if(component == logoutButton)
+		if(component == exitButton)
 			manager.exit();;
 		for(Button button:Button.values()){
 			if(component == button.getButton()){

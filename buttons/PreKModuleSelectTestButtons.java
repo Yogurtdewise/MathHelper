@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -31,6 +31,8 @@ import project.tests.PreKTestArithmetic;
 import project.tests.PreKTestCoins;
 import project.tests.PreKTestComparison;
 import project.tests.PreKTestCounting;
+import project.tests.PreKTestEstimate;
+import project.tests.PreKTestFinal;
 import project.tests.PreKTestFractions;
 import project.tests.PreKTestMatching;
 import project.tests.PreKTestSequences;
@@ -139,7 +141,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the DifficultySelectScreen!");
 				this.manager = screen.getManager();
 				screen.tearDown();
 				try {
@@ -151,7 +152,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				System.out.println("Opening the " + level.getName() + " " + getName() + " Test!");
 				difficultyScreen.tearDown();
 				try {
 					new PreKTestCounting(manager, false, level);
@@ -169,7 +169,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the DifficultySelectScreen!");
 				this.manager = screen.getManager();
 				screen.tearDown();
 				try {
@@ -181,7 +180,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				System.out.println("Opening the " + level.getName() + " " + getName() + " Test!");
 				difficultyScreen.tearDown();
 				try {
 					new PreKTestMatching(manager, false, level);
@@ -199,7 +197,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the DifficultySelectScreen!");
 				this.manager = screen.getManager();
 				screen.tearDown();
 				try {
@@ -211,7 +208,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				System.out.println("Opening the " + level.getName() + " " + getName() + " Test!");
 				difficultyScreen.tearDown();
 				try {
 					new PreKTestSequences(manager, false, level);
@@ -229,7 +225,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the DifficultySelectScreen!");
 				this.manager = screen.getManager();
 				screen.tearDown();
 				try {
@@ -241,7 +236,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				System.out.println("Opening the " + level.getName() + " " + getName() + " Test!");
 				difficultyScreen.tearDown();
 				try {
 					new PreKTestComparison(manager, false, level);
@@ -259,7 +253,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the DifficultySelectScreen!");
 				this.manager = screen.getManager();
 				screen.tearDown();
 				try {
@@ -271,7 +264,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				System.out.println("Opening the " + level.getName() + " " + getName() + " Test!");
 				difficultyScreen.tearDown();
 				try {
 					new PreKTestFractions(manager, false, level);
@@ -289,7 +281,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the DifficultySelectScreen!");
 				this.manager = screen.getManager();
 				screen.tearDown();
 				try {
@@ -301,7 +292,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				System.out.println("Opening the " + level.getName() + " " + getName() + " Test!");
 				difficultyScreen.tearDown();
 				try {
 					new PreKTestCoins(manager, false, level);
@@ -319,7 +309,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the DifficultySelectScreen!");
 				this.manager = screen.getManager();
 				screen.tearDown();
 				try {
@@ -331,7 +320,6 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				System.out.println("Opening the " + level.getName() + " " + getName() + " Test!");
 				difficultyScreen.tearDown();
 				try {
 					new PreKTestArithmetic(manager, false, level);
@@ -344,30 +332,52 @@ public class PreKModuleSelectTestButtons implements EnumerableButtonFactory{
 		 * The Estimate Prek-K Test module button.
 		 */
 		ESTIMATE   ("Estimate",  "8_estimate.png"  , 590, 400) {
+			private GUIManager manager;
+			private DifficultySelectScreen difficultyScreen;
+			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Test!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					difficultyScreen = new DifficultySelectScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				// TODO Auto-generated method stub
-				
+				difficultyScreen.tearDown();
+				try {
+					new PreKTestEstimate(manager, false, level);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 		},
 		/**
 		 * The Final Prek-K Test module button.
 		 */
 		FINAL      ("Final",     "9_final.png"     , 300, 225) {
+			private GUIManager manager;
+			private DifficultySelectScreen difficultyScreen;
+			
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Test!");
+				this.manager = screen.getManager();
+				screen.tearDown();
+				try {
+					difficultyScreen = new DifficultySelectScreen(manager, this);
+				} catch (IOException e) {
+					manager.handleException(e);
+				}
 			}
 
 			@Override
 			public void difficultySelected(DifficultyLevel level) {
-				// TODO Auto-generated method stub
-				
+				difficultyScreen.tearDown();
+				new PreKTestFinal(manager, false, level);
 			}
 		};
 	

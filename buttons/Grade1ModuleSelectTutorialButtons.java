@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -27,6 +27,7 @@ import project.interfaces.ModuleSelectButtonInterface;
 import project.screens.ModuleSelectScreen;
 import project.tools.ContentPane;
 import project.tools.ImageLoader;
+import project.tools.UnfinishedButtonWarning;
 
 /**
  * This class is used to describe the set of Tutorial module buttons available to a Grade1-2 student.
@@ -108,7 +109,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -118,7 +119,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -128,7 +129,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -137,7 +138,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 		COMPARISON ("Comparison","4_comparison.png", 593, 375) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -146,7 +147,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 		ODD_EVEN  ("Odd & Even", "5_odd&even.png" , 300, 200) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -155,7 +156,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 		MONEY      ("Money",     "6_money.png"     , 590, 200) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -165,7 +166,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + "Tutorial!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -174,7 +175,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 		ARITHMETIC   ("Arithmetic",  "8_arithmetic.png"  , 590, 375) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		},
 		/**
@@ -183,7 +184,7 @@ public class Grade1ModuleSelectTutorialButtons implements EnumerableButtonFactor
 		ESTIMATION      ("Estimation", "9_estimation.png", 300, 200) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Tutorial!");
+				UnfinishedButtonWarning.showWarning();
 			}
 		};
 	

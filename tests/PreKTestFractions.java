@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -32,6 +32,8 @@ import javax.swing.JOptionPane;
 import project.buttons.PreKModuleSelectTestButtons;
 import project.constants.DifficultyLevel;
 import project.interfaces.ModuleSelectButtonInterface;
+import project.interfaces.Questionable;
+import project.interfaces.QuestionableObserver;
 import project.interfaces.TestableObserver;
 import project.run.GUIManager;
 import project.screens.RewardScreen;
@@ -47,7 +49,7 @@ import project.tools.TextFileMaker;
  *  used twice.
  * @author Kenneth Chin
  */
-public class PreKTestFractions implements TestableObserver{
+public class PreKTestFractions implements TestableObserver, Questionable{
 	
 	//The ModuleSelectButtonInterface that describes this test.
 	private static final ModuleSelectButtonInterface TEST_BUTTON = PreKModuleSelectTestButtons.Button.FRACTIONS;
@@ -82,6 +84,11 @@ public class PreKTestFractions implements TestableObserver{
 	private int numCorrect = 0;  //The number of correct answers obtained from the user.
 	private ArrayList<String> wrongAnswers = new ArrayList<String>(); //Used to track incorrect answers.
 	
+	private QuestionableObserver observer; //The QuestionableObserver that want's to be notified of a user's answer.
+	private boolean isFinalTest = false;   //Used to determine if this is a cumulative(final) test or a standalone.
+	private String userAnswer = "";        //Used to store the user's answer, so it may be passed to observer.
+	private String wrongAnswerLogEntry = null; //The entry that a final test will write to the wrongAnswerLog.
+	
 	private QuestionPanelSelect testPanel; //The QuestionPanelSelect that will display questions.
 	private Clip clip; //The audio clip used to play the tutorial sounds.
 	
@@ -108,6 +115,36 @@ public class PreKTestFractions implements TestableObserver{
 		initArrays();
 		playTutorial();
 		askQuestion();
+	}
+	
+	/**
+	 * Creates a PreKTestFractions object, without displaying anything. Used specifically for
+	 *  final exams that implement QuestionableObserver. Use showQuestion(int) to display a
+	 *  question.
+	 * If isPractice == true, finalTest.answered(Questionable, String, String) will not be called
+	 *  until after the user clicks the "Next" button (displayed while showing the answer).
+	 * @param manager The GUIManager that manages the primary MainWindow.
+	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
+	 * @param difficulty The DifficultyLevel of this test.
+	 * @param maxQuestions An int indicating the maximum number of questions that will be displayed in the
+	 *  bottom-right corner of the screen. This should be the total number of questions on the final exam.
+	 * @param finalTest The QuestionableObserver that wants to be notified when a user has entered an answer.
+	 * @throws IOException Thrown if any image or audio file is missing.
+	 */
+	public PreKTestFractions(GUIManager manager, boolean isPractice, DifficultyLevel difficulty,
+			int maxQuestions, QuestionableObserver finalTest) throws IOException{
+		this.manager    = manager;
+		this.mainWindow = manager.getMainWindow();
+		this.isPractice = isPractice;
+		this.difficulty = difficulty;
+		
+		setDifficulty();
+		initArrays();
+		
+		maxNumberOfQuestions = maxQuestions;
+		observer = finalTest;
+		
+		isFinalTest = true;
 	}
 	
 	/**
@@ -334,7 +371,10 @@ public class PreKTestFractions implements TestableObserver{
 			entry    = question + " Student Answer: (Half " + aOrAn(imageName) + " " + imageName.toLowerCase()
 						+ ")" + " Correct Answer: (A whole " + imageName.toLowerCase() + ").";
 		}
-		wrongAnswers.add(entry);
+		if(isFinalTest)
+			wrongAnswerLogEntry = entry;
+		else
+			wrongAnswers.add(entry);
 	}
 	
 	/**
@@ -373,28 +413,39 @@ public class PreKTestFractions implements TestableObserver{
 	
 	@Override
 	public void answered(String answer) {
-		if(isPractice){
+		if(isPractice && !isFinalTest){
 			showAnswer(answer);
 		}
 		//If the user didn't answer, do nothing, else check the answer.
 		else if(!(answer.equals(QuestionPanelSelect.Answer.NONE.getStringValue()))){
-			checkAnswer(answer);
-			if(currentQuestionNum <= maxNumberOfQuestions){
-				askQuestion();
-			}else{
-				testPanel.tearDown();
+			if(isFinalTest){
 				if(clip.isActive())
 					clip.stop();
-				try {
-					int grade = getGrade();
-					boolean isBetter = isBetterGrade(numCorrect);
-					String fileName = "Fractions(" + difficulty.getName() + ")";
-					if(isBetter)
-						manager.setGrade(TEST_BUTTON, difficulty, numCorrect, maxNumberOfQuestions);
-					makeTestDetailFile();
-					new RewardScreen(manager, TEST_BUTTON, difficulty, grade, isBetter, manager.getRewardsFolderPath());
-				}catch (IOException e) {
-					manager.handleException(e);
+				userAnswer = answer;
+				if(isPractice)
+					showAnswer(answer);
+				else{
+					testPanel.tearDown();
+					observer.answered(this, checkAnswer(answer), wrongAnswerLogEntry);
+				}
+			}else{
+				checkAnswer(answer);
+				if(currentQuestionNum <= maxNumberOfQuestions){
+					askQuestion();
+				}else{
+					testPanel.tearDown();
+					if(clip.isActive())
+						clip.stop();
+					try {
+						int grade = getGrade();
+						boolean isBetter = isBetterGrade(numCorrect);
+						if(isBetter)
+							manager.setGrade(TEST_BUTTON, difficulty, numCorrect, maxNumberOfQuestions);
+						makeTestDetailFile();
+						new RewardScreen(manager, TEST_BUTTON, difficulty, grade, isBetter, manager.getRewardsFolderPath());
+					}catch (IOException e) {
+						manager.handleException(e);
+					}
 				}
 			}
 		}
@@ -403,7 +454,10 @@ public class PreKTestFractions implements TestableObserver{
 	@Override
 	public void nextClicked() {
 		if(isPractice){
-			if(currentQuestionNum <= maxNumberOfQuestions){
+			if(isFinalTest){
+				testPanel.tearDown();
+				observer.answered(this, checkAnswer(userAnswer), null);
+			}else if(currentQuestionNum <= maxNumberOfQuestions){
 				askQuestion();
 			}else{
 				if(clip.isActive())
@@ -448,6 +502,17 @@ public class PreKTestFractions implements TestableObserver{
 				manager.handleException(e);
 			}
 		}
+	}
+	
+	@Override
+	public void showQuestion(int questionNum) throws IOException{
+		testPanel = new QuestionPanelSelect(mainWindow, maxNumberOfQuestions);
+		testPanel.registerObserver(this);
+		playTutorial();
+		currentQuestionNum = questionNum;
+		userAnswer = "";
+		wrongAnswerLogEntry = null;
+		askQuestion();
 	}
 	
 	/**

@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -27,6 +27,7 @@ import project.interfaces.ModuleSelectButtonInterface;
 import project.screens.ModuleSelectScreen;
 import project.tools.ContentPane;
 import project.tools.ImageLoader;
+import project.tools.UnfinishedButtonWarning;
 
 /**
  * This class is used to describe the set of Practice module buttons available to a Grade3-4 student.
@@ -109,8 +110,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
-				
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -126,8 +126,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
-				
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -143,8 +142,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
-				
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -159,7 +157,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 		DECIMALS ("Decimals","4_decimals.png", 593, 400) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -174,7 +172,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 		NUM_CLASS  ("Number Classes", "5_numberClasses.png" , 300, 225) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -189,7 +187,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 		WORD_PROB      ("Word Problems", "6_wordProblems.png"     , 590, 225) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -205,7 +203,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -220,7 +218,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 		RELATIONS   ("Relations",  "8_relations.png"  , 590, 400) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -235,7 +233,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 		ARITHMETIC ("Arithmetic",     "9_arithmetic.png"     , 300, 225) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override
@@ -250,7 +248,7 @@ public class Grade3ModuleSelectPracticeButtons implements EnumerableButtonFactor
 		ESTIMATE ("Estimate", "10_estimate.png"     , 590, 225) {
 			@Override
 			public void doAction(ModuleSelectScreen screen) {
-				System.out.println("Opening the " + getName() + " Practice!");
+				UnfinishedButtonWarning.showWarning();
 			}
 
 			@Override

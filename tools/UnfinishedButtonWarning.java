@@ -16,31 +16,36 @@
  *                 features include test completion results, test completion summaries, and test
  *                 completion rewards.
  */
-package project.interfaces;
+package project.tools;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
- * Used as an observer subject abstraction for objects that can be clicked via the mouse.
+ * This class is used to notify the user that the button they clicked is not finished.
+ *  This is done by displaying a JOptionPane that closes when the "ok" button is clicked.
  * @author Kenneth Chin
- *
  */
-public interface Clickable {
+public final class UnfinishedButtonWarning {
+	
+	//The message shown in the JOptionPanel.
+	private static String message = "<p>We're sorry, this button isn't finished.</p></br>"
+									+ "<p>The operation you selected isn't complete.</p></br>"
+									+ "<p>Please choose another option, or log in at "
+									+ " a different grade level.</p>";
+	
+	/**
+	 * Private constructor prevents instantiation.
+	 */
+	private UnfinishedButtonWarning(){}
 
-	/**
-	 * Registers a ClickableObserver to be notified if this Clickable has been clicked by the mouse.
-	 * @param obs The ClickableObserver to be notified.
-	 */
-	public void registerObserver(ClickableObserver obs);
 	
 	/**
-	 * Removes a ClickableObserver from the list of ClickableObservers that are notified when this
-	 *  Clickable is clicked by the mouse.
-	 * @param obs The ClickableObserver to be removed.
+	 * Used to notify the user that the button they clicked is not finished.
+	 *  This is done by displaying a JOptionPane that closes when the "ok" button is clicked.
 	 */
-	public void removeObserver(ClickableObserver obs);
-	
-	/**
-	 * Calls the The ClickableObserver.clicked() method of all registered ClickableObservers when
-	 *  this Clickable has been clicked by the mouse.
-	 */
-	public void notifiyObserver();
+	public static void showWarning(){
+		JLabel label = new JLabel("<HTML><div>" + message + "</div></HTML>", JLabel.CENTER);
+		JOptionPane.showMessageDialog(null, label, "Under Construction...", JOptionPane.INFORMATION_MESSAGE);
+	}
 }

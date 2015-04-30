@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -22,6 +22,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 
@@ -63,7 +64,13 @@ public final class FontMaker{
 		if(fontType == SYSTEM)
 			return getDefaultFont(fontSize);
 		Font newFont = Font.createFont(Font.TRUETYPE_FONT, new File(getFontPath(fontType)));
-		return newFont.deriveFont((float)fontSize);
+		newFont = newFont.deriveFont((float)fontSize);
+		
+		//Register the font with the GraphicsEnvironment.
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge.registerFont(newFont);
+
+		return newFont;
 	}
 	
 	/**
@@ -110,7 +117,10 @@ public final class FontMaker{
 	public static Font getBoldFont(Font font){
 		if(font.isBold())
 			return font;
-		return font.deriveFont((Font.BOLD));
+		Font newFont = font.deriveFont((Font.BOLD));
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge.registerFont(newFont);
+		return newFont;
 	}
 	
 	/**

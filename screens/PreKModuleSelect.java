@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -306,7 +306,6 @@ public class PreKModuleSelect extends ModuleSelectScreen implements ClickableObs
 		for(int i = 0; i< buttonList.length; i++){
 			ModuleSelectButtonInterface button = buttonList[i];
 			if(component == button.getButton()){
-				System.out.println(button.getName() + " was clicked!");
 				button.doAction(this);
 				actionPerformed = true;
 				break;
@@ -316,7 +315,6 @@ public class PreKModuleSelect extends ModuleSelectScreen implements ClickableObs
 			//Check if a ControlButton was clicked.
 			for(ControlButton control:ControlButton.values()){
 				if(component == control.getButton()){
-					System.out.println(control.getButton().getName() + " was clicked!");
 					control.doAction(this);
 					actionPerformed = true;
 					break;

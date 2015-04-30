@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11.4
- * Version Date: 04/24/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -57,10 +57,21 @@ public class RewardScreen implements ClickableObserver{
 	
 	//TODO More rewards should be implemented.
 	private static final String REWARD_BACKGROUND = "\\images\\rewards\\Reward.png";
+	private static final String REWARD_SOUND      = "audio\\Rewards\\cheer.wav";
+	private static final int    REWARD_OFFSET     = 0;
+	private static final String FAILED_BACKGROUND = "\\images\\rewards\\Failed.png";
+	private static final String FAILED_SOUND      =  "audio\\Rewards\\awww.wav";
+	private static final int    FAILED_OFFSET     = -210;
 	private static final String IMAGE_FILE_TYPE   = "png";            //The image file format.
 	private static final int    PREFERRED_FONT    = FontMaker.ARIAL;  //Used to write the % correct answered.
 	private static final int    TEXT_LAYER        = 2;
 	private static final int    BUTTON_LAYER      = 3;
+	
+	private int yOffset = 0; //Used to offset the grade's y-origin, depending on reward.
+	
+	private String audioFilePath;  //Used to identify the audio file's path.
+	private String backgroundPath; //Used to identify the background image path.
+	
 	//The grade percent that is allows a student to take the next test.
 	private static final int    PASSING_GRADE     = 60;
 	
@@ -111,6 +122,7 @@ public class RewardScreen implements ClickableObserver{
 	 *  to be written to file.
 	 */
 	private void init() throws IOException{
+		initRewards();
 		setBackground();
 		playSound();
 		addGrade();
@@ -123,11 +135,27 @@ public class RewardScreen implements ClickableObserver{
 	}
 	
 	/**
+	 * Used to initialize the background image path, audio file path, and grade y-offset.
+	 */
+	private void initRewards(){
+		if(grade >= PASSING_GRADE){
+			backgroundPath = REWARD_BACKGROUND;
+			audioFilePath  = REWARD_SOUND;
+			yOffset        = REWARD_OFFSET;
+		}
+		else{
+			backgroundPath = FAILED_BACKGROUND;
+			audioFilePath  = FAILED_SOUND;
+			yOffset        = FAILED_OFFSET;
+		}
+	}
+	
+	/**
 	 * Used to change mainWindow's background image to the "REWARD_BACKGROUND".
 	 * @throws IOException Thrown if the reward image file can not be read.
 	 */
 	private void setBackground() throws IOException{
-		mainWindow.setBackgroundImage(ImageLoader.getBufferedImage(REWARD_BACKGROUND));
+		mainWindow.setBackgroundImage(ImageLoader.getBufferedImage(backgroundPath));
 	}
 	
 	/**
@@ -161,7 +189,7 @@ public class RewardScreen implements ClickableObserver{
 		int gradeX       = windowCenter - gradeCenter;
 		int xOffset      = 35;
 		
-		mainWindow.addLayer(gradePanel, TEXT_LAYER, (gradeX + xOffset), 355);
+		mainWindow.addLayer(gradePanel, TEXT_LAYER, (gradeX + xOffset), (355 + yOffset));
 	}
 	
 	/**
@@ -197,8 +225,7 @@ public class RewardScreen implements ClickableObserver{
 	 */
 	public void playSound(){
 	    try{
-	    	String filePath = "audio\\Rewards\\cheer.wav";
-	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(audioFilePath).getAbsoluteFile());
 	        Clip clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
 	        clip.start();

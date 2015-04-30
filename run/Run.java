@@ -16,31 +16,21 @@
  *                 features include test completion results, test completion summaries, and test
  *                 completion rewards.
  */
-package project.interfaces;
+package project.run;
 
 /**
- * Used as an observer subject abstraction for objects that can be clicked via the mouse.
+ * Starts the Swing Event Dispatch Thread and adds the primary GUI controller to the queue.
  * @author Kenneth Chin
  *
  */
-public interface Clickable {
+public class Run {
+	
+	/**
+	 * Run the program.
+	 * @param args Should be null. No arguments are processed.
+	 */
+	public static void main(String[] args){
+		GUIManager.runLaunch();
 
-	/**
-	 * Registers a ClickableObserver to be notified if this Clickable has been clicked by the mouse.
-	 * @param obs The ClickableObserver to be notified.
-	 */
-	public void registerObserver(ClickableObserver obs);
-	
-	/**
-	 * Removes a ClickableObserver from the list of ClickableObservers that are notified when this
-	 *  Clickable is clicked by the mouse.
-	 * @param obs The ClickableObserver to be removed.
-	 */
-	public void removeObserver(ClickableObserver obs);
-	
-	/**
-	 * Calls the The ClickableObserver.clicked() method of all registered ClickableObservers when
-	 *  this Clickable has been clicked by the mouse.
-	 */
-	public void notifiyObserver();
+	}
 }

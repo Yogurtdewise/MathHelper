@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.9.2
- * Version Date: 04/11/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -170,7 +170,6 @@ public class TutorialPlayerScreen implements ClickableObserver{
 		//Set End of Video event handler
 		this.VideoPlayer.setOnEndOfMedia(new Runnable() {
 			@Override public void run() {
-				System.out.println("End of video was reached!");
 				
 				//Remove replay button
 				mainWindow.removeLayer(pauseButton);
@@ -262,7 +261,6 @@ public class TutorialPlayerScreen implements ClickableObserver{
 	@Override
 	public void clicked(JComponent component) {
 		if(component == playButton) {
-			System.out.println("Play was clicked!");
 			
 			//Play the video
 			this.VideoPlayer.play();
@@ -276,7 +274,6 @@ public class TutorialPlayerScreen implements ClickableObserver{
 			mainWindow.addLayer(pauseButton, BUTTON_LAYER, padding, 550);
 		}
 		else if(component == pauseButton) {
-			System.out.println("Pause was clicked!");
 			
 			//Pause video
 			this.VideoPlayer.pause();
@@ -290,7 +287,6 @@ public class TutorialPlayerScreen implements ClickableObserver{
 			mainWindow.addLayer(playButton, BUTTON_LAYER, padding, 550);
 		}
 		else if(component == replayButton) {
-			System.out.println("Replay was clicked!");
 			
 			//Reset Time
 			this.VideoPlayer.seek(this.VideoPlayer.getStartTime());

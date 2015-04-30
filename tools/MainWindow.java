@@ -1,7 +1,7 @@
 /**
  * Name:         Math Helper
- * Version:      0.11..4
- * Version Date: 04/11/2015
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
  * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
  * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
  *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
@@ -39,7 +39,8 @@ import java.util.List;
  *  is managed by a BorderLayout. A BufferedImage is set as the background image of the main
  *  window. This background image is contained on the "1" layer of the JLayeredPane. Additional
  *  convenience methods have been added to simplify the addition of components to this JFrame.
- * @author Kenneth Chin
+ * @author Kenneth Chin w/ collaborations from Christopher Moraal
+ *  ({@link project.tools.MainWindow#removeLayer(JComponent component) See removeLayer(JComponent component)}
  *
  */
 public final class MainWindow extends JFrame{
@@ -149,7 +150,6 @@ public final class MainWindow extends JFrame{
 	 * A helper method, used to initialize and set MainWindow's icon images.
 	 */
 	private void setIcons(){
-		//String filePath = System.getProperty("user.dir");
 		final List<BufferedImage> icons = new ArrayList<BufferedImage>();
 		try {
 			icons.add(ImageLoader.getBufferedImage(SMALL_ICON_PATH));
@@ -223,10 +223,10 @@ public final class MainWindow extends JFrame{
 	}
 	
 	/**
-	 * Used to remove a JComponent from the content pane. Resets the window to previous state.
-	 * @param component A JComponent to remove from the specified layer. It is recommeded that the JComponent 
-	 * is a JPanel, but may be a any sub-class of JComponent.
-	 */
+	* Used to remove a JComponent from the content pane. Resets the window to previous state.
+	* @param component A JComponent to remove from the specified layer. It is recommeded that the JComponent
+	* is a JPanel, but may be a any sub-class of JComponent.
+	*/
 	public void removeLayer(JComponent component) {
 		contentPane.remove(component);
 		contentPane.revalidate();

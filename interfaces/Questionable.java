@@ -18,29 +18,21 @@
  */
 package project.interfaces;
 
-/**
- * Used as an observer subject abstraction for objects that can be clicked via the mouse.
- * @author Kenneth Chin
- *
- */
-public interface Clickable {
+import java.io.IOException;
 
-	/**
-	 * Registers a ClickableObserver to be notified if this Clickable has been clicked by the mouse.
-	 * @param obs The ClickableObserver to be notified.
-	 */
-	public void registerObserver(ClickableObserver obs);
+/**
+ * This interface is implemented by classes that can display a "Test" question to the user. Its methods
+ *  are used QuestionableObserver objects to display a single question. Classes that want to know when
+ *  an answer is received by this Questionable should implement QuestionableObserver.
+ * @author Kenneth Chin
+ */
+public interface Questionable {
 	
 	/**
-	 * Removes a ClickableObserver from the list of ClickableObservers that are notified when this
-	 *  Clickable is clicked by the mouse.
-	 * @param obs The ClickableObserver to be removed.
+	 * Used to display a single "Test" question.
+	 * @param questionNum An int indicating displayed question's number out of a set of questions.
+	 * @throws IOException Thrown if any image or audio file of this Questionable can not be read.
 	 */
-	public void removeObserver(ClickableObserver obs);
+	public void showQuestion(int questionNum) throws IOException;
 	
-	/**
-	 * Calls the The ClickableObserver.clicked() method of all registered ClickableObservers when
-	 *  this Clickable has been clicked by the mouse.
-	 */
-	public void notifiyObserver();
 }

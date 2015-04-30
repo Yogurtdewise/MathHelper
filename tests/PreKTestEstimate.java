@@ -1,3 +1,21 @@
+/**
+ * Name:         Math Helper
+ * Version:      1.0.0
+ * Version Date: 04/30/2015
+ * Team:         "Cool Math" - Consists of Kenneth Chin, Chris Moraal, Elena Eroshkina, and Austin Clark
+ * Purpose:      The "Math Helper" software is used to aid parents and teachers with the teaching and testing
+ *                 of students, grades PreK through Grade 4, in the subject of Mathematics. The lessons and
+ *                 tests provided cover a subset of skills as specified by the Massachusetts Department of
+ *                 Education's (DOE) website, found at:
+ *                              http://www.doe.mass.edu/frameworks/math/2000/toc.html
+ *                 The DOE category, “Number Sense and Operations” for Grades Pre-K through Grade 4,
+ *                 is the subset that the "Math Helper" software covers.
+ *                 
+ *               Features and services of the "Math Helper" software include, Login/Logout mechanics,
+ *                 practice and formal testing, and tutorials of the above-specified skills. Additional
+ *                 features include test completion results, test completion summaries, and test
+ *                 completion rewards.
+ */
 package project.tests;
 
 import java.io.File;
@@ -13,7 +31,6 @@ import javax.swing.JOptionPane;
 
 import project.buttons.PreKModuleSelectTestButtons;
 import project.constants.DifficultyLevel;
-import project.constants.SequenceBoard;
 import project.interfaces.ModuleSelectButtonInterface;
 import project.interfaces.Questionable;
 import project.interfaces.QuestionableObserver;
@@ -24,21 +41,23 @@ import project.tools.MainWindow;
 import project.tools.QuestionPanelSelect;
 import project.tools.TextFileMaker;
 
-public class PreKTestSequences implements TestableObserver, Questionable{
+/**
+ * This class is used to test PreK-K students on number Estimation skills. It displays two
+ *  selectable panels, each with a number of apples. A student is asked to select the panel that
+ *  closest in value to an image specified in a question, then click the "Submit" button. While a
+ *  student may be asked to estimate the same value multiple times, the combination of answer images
+ *  and question values will never be used twice.
+ * @author Kenneth Chin
+ */
+public class PreKTestEstimate implements TestableObserver, Questionable{
 	
 	//The ModuleSelectButtonInterface that describes this test.
-	private static final ModuleSelectButtonInterface TEST_BUTTON = PreKModuleSelectTestButtons.Button.SEQUENCES;
-	
-	//Index representations of 1st, 2nd, 3rd... The lowest and highest sequence position as array indexes.
-	private static final int LOWEST_INT    = 0;        //MUST be zero. The lowest index of the boards array.
-	private static final int HIGHEST_INT   = 4;        //The highest index of the boards array.
+	private static final ModuleSelectButtonInterface TEST_BUTTON = PreKModuleSelectTestButtons.Button.ESTIMATE;
 	
 	//Difficulty settings. Note: MUST be less than the maximum number of question permutations.
-	//Since the number of permutations for n=5, r=2, given P(n,r) = n!/(n-r)! is 20, HARD_MAX_QUESTIONS
-	// is set to 15.
-	private static final int EASY_MAX_QUESTIONS = 8;    //The maximum number of questions for the "Easy" difficulty.
-	private static final int NORM_MAX_QUESTIONS = 12;   //The maximum number of questions for the "Normal" difficulty.
-	private static final int HARD_MAX_QUESTIONS = 15;   //The maximum number of questions for the "Hard" difficulty.
+	private static final int EASY_MAX_QUESTIONS = 10;   //The maximum number of questions for the "Easy" difficulty.
+	private static final int NORM_MAX_QUESTIONS = 15;   //The maximum number of questions for the "Normal" difficulty.
+	private static final int HARD_MAX_QUESTIONS = 20;   //The maximum number of questions for the "Hard" difficulty.
 	private int maxNumberOfQuestions = EASY_MAX_QUESTIONS; //The actual maximum number of questions for this test.
 	
 	private Random rng = new Random(System.currentTimeMillis()); //A random number generator.
@@ -47,14 +66,14 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	private DifficultyLevel difficulty;   //The current DifficultyLevel of this test.
 	
 	private int currentQuestionNum = 1;   //The current question number.
-	private SequenceBoard[] boards = SequenceBoard.values(); //An array of all SequenceBoard enums.
-	//The set (correctAnswer, wrongAnswer). Used to determine if a correct answer's panel was used
-	//  with a wrongAnswer's panel.
-	private boolean[][] isNumberSetUsed = new boolean[(HIGHEST_INT + 1)][(HIGHEST_INT + 1)];
-	private int correctAnswer;   //The index of the panel that is correct.
-	private int wrongAnswer;     //The index of the panel that is incorrect.
-	private String answerString; //The correct answer's panel String ("left" or "right").
-	private int numCorrect = 0;  //The number of correct answers obtained from the user.
+
+	//The set of all questions; comparisonPoint, correctAnswer, wrongAnswer
+	private boolean[][][] isNumberSetUsed = new boolean[Value.values().length][Value.values().length][Value.values().length];
+	private int correctAnswer;      //The value of the correct answer.
+	private int wrongAnswer;        //The value of the wrong answer.
+	private int comparisonPoint;    //The value that whose estimate is to be compared to.
+	private String answerString;    //The correct answer's panel String ("left" or "right").
+	private int numCorrect = 0;     //The number of correct answers obtained from the user.
 	private ArrayList<String> wrongAnswers = new ArrayList<String>(); //Used to track incorrect answers.
 	
 	private QuestionableObserver observer; //The QuestionableObserver that want's to be notified of a user's answer.
@@ -69,13 +88,13 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	private MainWindow mainWindow; //The MainWindow that will have questions displayed on.
 	
 	/**
-	 * The PreKTestSequences constructor. Creates and displays a Sequences test for PreK-K students.
+	 * The PreKTestEstimate constructor. Creates and displays an Estimate test for PreK-K students.
 	 * @param manager The GUIManager that manages the primary MainWindow & all GUI screens.
 	 * @param isPractice A boolean indicating true if this test is a practice test, false otherwise.
 	 * @param difficulty The DifficultyLevel of this test.
 	 * @throws IOException Thrown if any image file is missing.
 	 */
-	public PreKTestSequences(GUIManager manager, boolean isPractice, DifficultyLevel difficulty) throws IOException{
+	public PreKTestEstimate(GUIManager manager, boolean isPractice, DifficultyLevel difficulty) throws IOException{
 		this.manager    = manager;
 		this.mainWindow = manager.getMainWindow();
 		this.isPractice = isPractice;
@@ -91,7 +110,7 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	}
 	
 	/**
-	 * Creates a PreKTestSequences object, without displaying anything. Used specifically for
+	 * Creates a PreKTestEstimate object, without displaying anything. Used specifically for
 	 *  final exams that implement QuestionableObserver. Use showQuestion(int) to display a
 	 *  question.
 	 * If isPractice == true, finalTest.answered(Questionable, String, String) will not be called
@@ -104,7 +123,7 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	 * @param finalTest The QuestionableObserver that wants to be notified when a user has entered an answer.
 	 * @throws IOException Thrown if any image or audio file is missing.
 	 */
-	public PreKTestSequences(GUIManager manager, boolean isPractice, DifficultyLevel difficulty,
+	public PreKTestEstimate(GUIManager manager, boolean isPractice, DifficultyLevel difficulty,
 			int maxQuestions, QuestionableObserver finalTest) throws IOException{
 		this.manager    = manager;
 		this.mainWindow = manager.getMainWindow();
@@ -125,7 +144,7 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	 */
 	public void playTutorial(){
 	    try{
-	    	String filePath = "audio\\Test Tutorials\\Sequences.wav";
+	    	String filePath = "audio\\Test Tutorials\\Estimate.wav";
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
 	        clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
@@ -145,14 +164,30 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	}
 	
 	/**
-	 * Used to obtain an unused combination of panel arrangements.
+	 * Used to obtain an unused combination of panel images and question type.
 	 */
 	private void getValues(){
+		int size = Value.values().length;
+		int highLow; //Used to randomize correct/wrongAnswer to be above(1) or below(0) comparisonPoint.
 		do{
-			correctAnswer = getRandomInt(LOWEST_INT, HIGHEST_INT);
-			wrongAnswer   = getRandomInt(LOWEST_INT, HIGHEST_INT);
-		}while(correctAnswer == wrongAnswer || isUsedQuestion(correctAnswer, wrongAnswer));
-		isNumberSetUsed[correctAnswer][wrongAnswer] = true;
+			//Upper & Lower bound are excluded.
+			comparisonPoint = getRandomInt(1, size - 2);
+			highLow         = getRandomInt(0, 1);
+			if(highLow == 0){
+				correctAnswer = getRandomInt(0, comparisonPoint - 1);
+				highLow       = getRandomInt(0, 1);
+				wrongAnswer   = (highLow == 0) ? getRandomInt(0, correctAnswer - 1)
+									: getRandomInt(comparisonPoint + 1, size - 1);
+			}else{
+				correctAnswer = getRandomInt(comparisonPoint + 1, size - 1);
+				highLow       = getRandomInt(0, 1);
+				wrongAnswer   = (highLow == 0) ? getRandomInt(0, comparisonPoint - 1)
+									: getRandomInt(correctAnswer + 1, size - 1);
+			}
+		}while((correctAnswer >= (size - 1)) || correctAnswer <= 0
+				|| (wrongAnswer >= (size - 1)) || wrongAnswer <= 0
+				|| isNumberSetUsed[comparisonPoint][correctAnswer][wrongAnswer]);
+		isNumberSetUsed[comparisonPoint][correctAnswer][wrongAnswer] = true;
 	}
 	
 	/**
@@ -160,24 +195,25 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	 * Displays the question and two panels.
 	 */
 	private void makeQuestion(){
-		String question    = "Which picture shows the orange in <b><u>"
-							+ boards[correctAnswer].getName().toLowerCase()
-							+ "</u></b> place, from left to right?";
+		String question = "<CENTER>Which picture has the number of apples closest to that shown below?</CENTER></br><"
+					+ "<img src = \"file:" + System.getProperty("user.dir")
+					+ Value.values()[comparisonPoint].getFilePath() + "\" align=\"bottom\">";
+
 		String leftImagePath;
 		String rightImagePath;
 		int answerLoc = getRandomInt(0, 1);
 		if(answerLoc == 0){
 			answerString   = QuestionPanelSelect.Answer.LEFT.getStringValue();
-			leftImagePath  = boards[correctAnswer].getPath();
-			rightImagePath = boards[wrongAnswer].getPath();
+			leftImagePath  = Value.values()[correctAnswer].getFilePath();
+			rightImagePath = Value.values()[wrongAnswer].getFilePath();
 		}
 		else{
 			answerString   = QuestionPanelSelect.Answer.RIGHT.getStringValue();
-			leftImagePath  = boards[wrongAnswer].getPath();
-			rightImagePath = boards[correctAnswer].getPath();
+			leftImagePath  = Value.values()[wrongAnswer].getFilePath();
+			rightImagePath = Value.values()[correctAnswer].getFilePath();
 		}
 		try {
-			testPanel.showQuestion(question, (currentQuestionNum), leftImagePath, rightImagePath);
+			testPanel.showQuestion(question, currentQuestionNum, leftImagePath, rightImagePath);
 		} catch (IOException e) {
 			manager.handleException(e);
 		}
@@ -213,25 +249,26 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	}
 	
 	/**
-	 * Used to determine if the combination of panelToMatch and aDifferentpanel
-	 *  has been used in a previous question.
-	 * @param panelToMatch An int. The index of the "boards" array that the user is asked to match.
-	 * @param aDifferentpanel An int. The index of the "boards" array that represents a "wrong" answer.
-	 * @return A boolean. True if the combination of panelToMatch and aDifferentpanel
-	 *  has been used in a previous question; false otherwise.
-	 */
-	private boolean isUsedQuestion(int panelToMatch, int aDifferentpanel){
-		return isNumberSetUsed[panelToMatch][aDifferentpanel];
-	}
-	
-	/**
-	 * Used to initialize the isNumberSetUsed array. The isNumberSetUsed array is set
-	 *  to prevent the same panel from being shown as both a correct and incorrect answer
-	 *  (asked to match 5th, but both panels would show images with objects in the 5th position).
+	 * Used to initialize the isNumberSetUsed array. Prevents equidistant values from being asked.
+	 *  IE. "Estimate 2". Prevents (4,0), (3,1), (2,2), (1,3), (0,4) as potential correct/wrong
+	 *   answer combinations.
+	 *  Also prevents correctAnswer/wrongAnswer combinations where wrongAnswer is closer value
+	 *   comparisonPoint than correctAnswer.
+	 *   IE. "Estimate 10". correctAnswer = 3, wrongAnswer = 7 Should not be allowed.
 	 */
 	private void initArrays(){
-		for(int i = 0; i < boards.length; i++){
-			isNumberSetUsed[i][i] = true;
+		int size = Value.values().length;
+		for(int i = 0; i < size; i++){
+			for(int rightAnswer = 0; rightAnswer < size; rightAnswer++){
+				for(int incorrectAnswer = 0; incorrectAnswer < size; incorrectAnswer++){
+					int rightABS = ((i - rightAnswer) > 0) ? (i - rightAnswer) : ((i - rightAnswer) * -1);
+					int wrongABS = ((i - incorrectAnswer) > 0) ? (i - incorrectAnswer) : ((i - incorrectAnswer) * -1);
+					if(rightABS >= wrongABS)
+						isNumberSetUsed[i][rightAnswer][incorrectAnswer] = true;
+					if(rightAnswer == i || incorrectAnswer == i)
+						isNumberSetUsed[i][rightAnswer][incorrectAnswer] = true;
+				}
+			}
 		}
 	}
 	
@@ -286,10 +323,11 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	 *  Adds the created String to the wrongAnswers ArrayList.
 	 */
 	private void logWrongAnswer(){
-		String question = "Question " + (currentQuestionNum - 1) + ": Find the image that shows (" 
-									 + boards[correctAnswer].getName() + ") place.";
-		String entry    = question + " Student Answer: (" + boards[wrongAnswer].getName() + ")"
-								   + " Correct Answer: (" + boards[correctAnswer].getName() + ").";
+		String question;
+		String entry;
+		question = "Question " + (currentQuestionNum - 1) + ": Estimate(Closest to " + comparisonPoint + ")";
+		entry    = question + " Student Answer: (" + wrongAnswer + ")"
+									   + " Correct Answer: (" + correctAnswer + ").";
 		if(isFinalTest)
 			wrongAnswerLogEntry = entry;
 		else
@@ -304,7 +342,7 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 	 */
 	private void makeTestDetailFile() throws IOException{
 		if(wrongAnswers.size() > 0){
-			String filePath = manager.getTestFolderPath() + "\\Sequences\\";
+			String filePath = manager.getTestFolderPath() + "\\Estimate\\";
 			String fileName = TextFileMaker.getTimeStamp() + "_(" + difficulty.getName() + ")";
 			String[] textArray = wrongAnswers.toArray(new String[wrongAnswers.size()]);
 			TextFileMaker.writeArray(filePath, fileName, textArray);
@@ -432,5 +470,77 @@ public class PreKTestSequences implements TestableObserver, Questionable{
 		userAnswer = "";
 		wrongAnswerLogEntry = null;
 		askQuestion();
+	}
+	
+	/**
+	 * This enum is used to define different values that may be used for comparison. Each value is 
+	 *  associated with a name, int value, and image file name.
+	 * Note: Number of valid questions = 3890.
+	 * @author Kenneth Chin
+	 */
+	private enum Value{
+		ZERO     ("Zero"     , 0 , "zero.png"),
+		ONE      ("One"      , 1 , "one.png"),
+		TWO      ("Two"      , 2 , "two.png"),
+		THREE    ("Three"    , 3 , "three.png"),
+		FOUR     ("Four"     , 4 , "four.png"),
+		FIVE     ("Five"     , 5 , "five.png"),
+		SIX      ("Six"      , 6 , "six.png"),
+		SEVEN    ("Seven"    , 7 , "seven.png"),
+		EIGHT    ("Eight"    , 8 , "eight.png"),
+		NINE     ("Nine"     , 9 , "nine.png"),
+		TEN      ("Ten"      , 10, "ten.png"),
+		ELEVEN   ("Eleven"   , 11, "eleven.png"),
+		TWELVE   ("Twelve"   , 12, "twelve.png"),
+		THIRTEEN ("Thirteen" , 13, "thirteen.png"),
+		FOURTEEN ("Fourteen" , 14, "fourteen.png"),
+		FIFTEEN  ("Fifteen"  , 15, "fifteen.png"),
+		SIXTEEN  ("Sixteen"  , 16, "sixteen.png"),
+		SEVENTEEN("Seventeen", 17, "seventeen.png"),
+		EIGHTEEN ("Eighteen" , 18, "eighteen.png"),
+		NINETEEN ("Nineteen" , 19, "nineteen.png"),
+		TWENTY   ("Twenty"   , 20, "twenty.png");
+		
+		private String filePath;
+		private int value;
+		private String name;
+		
+		private static final String imagePath = "\\images\\test\\estimate\\";
+		
+		/**
+		 * The Value constructor.
+		 * @param name A String describing this Value's name.
+		 * @param value An int describing this value's int value.
+		 * @param fileName A String describing this Value's image file name.
+		 */
+		private Value(String name, int value, String fileName){
+			this.name      = name;
+			this.value = value;
+			this.filePath  = imagePath + fileName;
+		}
+		
+		/**
+		 * Used to obtain a String describing this Value's name.
+		 * @return A String describing this Value's name.
+		 */
+		public String getName(){
+			return name;
+		}
+		
+		/**
+		 * Used to obtain a String describing this Value's int value.
+		 * @return A String describing this Value's int value.
+		 */
+		public int getValue(){
+			return value;
+		}
+		
+		/**
+		 * Used to obtain a String describing this Value's image file path from the program's root directory.
+		 * @return A String describing this Value's image file path from the program's root directory.
+		 */
+		public String getFilePath(){
+			return filePath;
+		}
 	}
 }
