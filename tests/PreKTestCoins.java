@@ -464,6 +464,11 @@ public class PreKTestCoins implements TestableObserver, Questionable{
 		askQuestion();
 	}
 	
+	@Override
+	public int getMaxQuestions(){
+		return HARD_MAX_QUESTIONS;
+	}
+	
 	/**
 	 * This enum is used to define different US coins. Each coin is associated with a name, cent value,
 	 *  and image file name.

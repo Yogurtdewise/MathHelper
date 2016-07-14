@@ -35,4 +35,14 @@ public interface Questionable {
 	 */
 	public void showQuestion(int questionNum) throws IOException;
 	
+	/**
+	 * Used to obtain the HARD_MAX_QUESTIONS constant of a test.
+	 * This number should not be exceeded, as it represents the maximum
+	 *  permutations of the test. To do otherwise would cause an infinite
+	 *  loop, as the test searches for an unused question.
+	 * @return An integer representing the maximum permutations allowed for
+	 *  a given test.
+	 */
+	public int getMaxQuestions();
+	
 }

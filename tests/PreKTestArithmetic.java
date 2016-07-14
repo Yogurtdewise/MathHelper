@@ -441,4 +441,9 @@ public class PreKTestArithmetic implements TestableObserver, Questionable{
 		wrongAnswerLogEntry = null;
 		makeAndShowQuestion();
 	}
+	
+	@Override
+	public int getMaxQuestions(){
+		return HARD_MAX_QUESTIONS;
+	}
 }

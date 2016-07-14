@@ -121,10 +121,14 @@ public class PreKTestFinal implements QuestionableObserver{
 	 * Used to choose a psudo-random PreK-K test and have it display a question.
 	 */
 	private void askQuestion(){
-		currentTestIndex  = getRandomInt(0, (Question.values().length - 1));
-		Questionable test = Question.values()[currentTestIndex].getTest();
+		Questionable test = null;
+		do{
+			currentTestIndex  = getRandomInt(0, (Question.values().length - 1));
+			test = Question.values()[currentTestIndex].getTest();
+		}while(Question.values()[currentTestIndex].getNumQuestionsAsked() > test.getMaxQuestions());
 		try {
 			test.showQuestion(currentQuestionNum);
+			Question.values()[currentTestIndex].incrementNumQuestionsAsked();
 		} catch (IOException e) {
 			manager.handleException(e);
 		}
@@ -348,7 +352,8 @@ public class PreKTestFinal implements QuestionableObserver{
 			}
 		};
 		
-		protected Questionable test = null; //The instance of this this test.
+		protected Questionable test = null;  //The instance of this this test.
+		protected int numQuestionsAsked = 0; //The number of questions asked for this test.
 		
 		/**
 		 * The empty Question constructor.
@@ -377,6 +382,23 @@ public class PreKTestFinal implements QuestionableObserver{
 		 */
 		protected Questionable getTest(){
 			return test;
+		}
+		
+		/**
+		 * Used to obtain the number of questions asked of this test.
+		 * This number should not exceed the value returned by Questionable.getMaxQuestions().
+		 * @return An int indicating the number of questions asked from this test.
+		 */
+		protected int getNumQuestionsAsked(){
+			return numQuestionsAsked;
+		}
+		
+		/**
+		 * Used to increment the number of questions asked of this test.
+		 * This method should be called after each successful call to Questionable.showQuestion().
+		 */
+		protected void incrementNumQuestionsAsked(){
+			numQuestionsAsked++;
 		}
 		
 		/**

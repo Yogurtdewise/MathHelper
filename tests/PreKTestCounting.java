@@ -438,4 +438,9 @@ public class PreKTestCounting implements TestableObserver, Questionable{
 		wrongAnswerLogEntry = null;
 		askQuestion();
 	}
+	
+	@Override
+	public int getMaxQuestions(){
+		return HARD_MAX_QUESTIONS;
+	}
 }

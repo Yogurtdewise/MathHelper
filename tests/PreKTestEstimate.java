@@ -472,6 +472,11 @@ public class PreKTestEstimate implements TestableObserver, Questionable{
 		askQuestion();
 	}
 	
+	@Override
+	public int getMaxQuestions(){
+		return HARD_MAX_QUESTIONS;
+	}
+	
 	/**
 	 * This enum is used to define different values that may be used for comparison. Each value is 
 	 *  associated with a name, int value, and image file name.

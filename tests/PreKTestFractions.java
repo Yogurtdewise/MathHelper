@@ -515,6 +515,11 @@ public class PreKTestFractions implements TestableObserver, Questionable{
 		askQuestion();
 	}
 	
+	@Override
+	public int getMaxQuestions(){
+		return HARD_MAX_QUESTIONS;
+	}
+	
 	/**
 	 * This enum is used to associate and store image file names and image names to a constant.
 	 * @author Kenneth Chin

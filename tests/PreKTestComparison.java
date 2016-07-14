@@ -460,6 +460,11 @@ public class PreKTestComparison implements TestableObserver, Questionable{
 		askQuestion();
 	}
 	
+	@Override
+	public int getMaxQuestions(){
+		return HARD_MAX_QUESTIONS;
+	}
+	
 	/**
 	 * This enum is used as the implementation of the state pattern for PreKTestComparison.
 	 * This enum is used to differentiate question types and their functions. Each question type
